@@ -31,35 +31,9 @@ class Test extends Controller
     public function test()
     {
 
-//        $config = [
-//            'app_id' => 'wxcdc792b2207365e6',
-//            'mch_id' => '1408495802',
-//            'key' => 'ganglongkeji123ganglongkeji123ga',
-//            'cert_path' => 'C:\Users\administrator_liwy\Desktop\web\API\ganglonggou-api\cert\wxJsApi\apiclient_cert.pem',
-//            'key_path' => 'C:\Users\administrator_liwy\Desktop\web\API\ganglonggou-api\cert\wxJsApi\apiclient_key.pem',
-//            // ...
-//        ];
-//
-//        $payment = Factory::payment($config);
-//
-//        $redpack = $payment->redpack;
-//
-//        $redpackData = [
-//            'mch_billno' => 'test123456',
-//            'send_name' => '给山不转水转的红包',
-//            're_openid' => 'oNSO9wHBr-KbfKt0sNybs2wByWHY',
-//            'total_num' => 1,  //固定为1，可不传
-//            'total_amount' => 100,  //单位为分，不小于100
-//            'wishing' => '给山不转水转的红包',
-//            'client_ip' => '61.177.154.210',  //可不传，不传则由 SDK 取当前客户端 IP
-//            'act_name' => '测试活动',
-//            'remark' => '测试备注',
-//            // ...
-//        ];
-//
-//        $result = $redpack->sendNormal($redpackData);
-//        return $result;
-
+//        $test = new Array();
+//        //$test['sd'] = 111;
+//        return $test;
 
     }
 
