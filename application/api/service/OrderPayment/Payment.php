@@ -152,6 +152,9 @@ class Payment
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
                 break;
+            case 'GsyhPayment':
+                $PayClass=new GsyhPayment();
+                break;
             default:
                 throw new CommonException(['无效支付方式,该支付方式或已关闭']);
         }
@@ -195,6 +198,9 @@ class Payment
                 break;
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
+                break;
+            case 'GsyhPayment':
+                $PayClass=new  GsyhPayment();
                 break;
             default:
                 throw new CommonException(["msg" => "该支付方式支付查询功能暂未开放"]);
@@ -243,6 +249,9 @@ class Payment
                 break;
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
+                break;
+            case 'GsyhPayment':
+                $PayClass=new  GsyhPayment();
                 break;
             default:
                 throw new CommonException(["msg" => "该支付方式支付退款功能暂未开放"]);

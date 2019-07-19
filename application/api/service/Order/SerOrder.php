@@ -83,7 +83,7 @@ class SerOrder
             , ['is_del', '=', 0]])
             ->find();
         if (!$this->userInfo) {
-            throw new CommonException(['非正常用户状态']);
+            throw new CommonException(['msg'=>'非正常用户状态']);
         }
 
         /*地址信息*/

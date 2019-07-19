@@ -271,6 +271,29 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hassan Khan",
+                    "homepage": "http://hassankhan.me/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Lightweight configuration file loader that supports PHP, INI, XML, JSON, and YAML files",
+            "homepage": "http://hassankhan.me/config/",
+            "keywords": [
+                "config",
+                "configuration",
+                "ini",
+                "json",
+                "microphp",
+                "unframework",
+                "xml",
+                "yaml",
+                "yml"
+            ],
             "time": "2019-04-06T17:34:30+00:00"
         },
         {
@@ -1152,12 +1175,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "7fddc3253761e78cd966db18d118c5195a85123c"
+                "reference": "1be377c2e67b727b816020c35db1ae6fbc875b72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/7fddc3253761e78cd966db18d118c5195a85123c",
-                "reference": "7fddc3253761e78cd966db18d118c5195a85123c",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/1be377c2e67b727b816020c35db1ae6fbc875b72",
+                "reference": "1be377c2e67b727b816020c35db1ae6fbc875b72",
                 "shasum": ""
             },
             "require": {
@@ -1195,7 +1218,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2019-05-10T08:06:39+00:00"
+            "time": "2019-07-16T06:56:10+00:00"
         },
         {
             "name": "topthink/think-image",

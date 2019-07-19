@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>江苏岗隆数码-工行支付页面</title>
+</head>
+<link rel="stylesheet" href="/static/css/ganglonggou_api.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.cookie.min.js"></script>
+<script src="/static/js/lib-flexible.js"></script>
+
+<body>
+<div class="load-box">感谢您选择岗隆数码，正在为您拉起农行支付页面</div>
+<div class="main">
+    <div class="head-box">
+        <div class="head-main">
+            <p class="head-main-desc"><span>江苏岗隆数码--您身边的数码产品服务商</span></p>
+            <P class="head-main-price"><span>￥</span><{$order_info.order_price}></P>
+        </div>
+    </div>
+    <div class="lower-box animated bounceIn fadeInUp">
+        <span></span>
+        <div class="goods-list-box">
+            <{foreach $order_info.goods_list as $k=>$v}>
+            <div class="one-goods">
+                <div class="d"></div>
+                <div class="goods-name"><{$v['goods_name']}></div>
+            </div>
+            <{/foreach}>
+        </div>
+        <div class="button-box">
+            <div class="button" style="background-image: linear-gradient(45deg,rgb(215,84,85),rgb(232,48,21));"
+                 onclick="callpay()">立即支付
+            </div>
+            <div class="button" onclick="blank()">返回上级页面</div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <form id="pay_form" name="pay_form" action="https://mywap2.icbc.com.cn/ICBCWAPBank/servlet/ICBCWAPEBizServlet"
+          method="post">
+        <input type="text" name="interfaceName" id="interfaceName" value="ICBC_WAPB_B2C"/>
+        <input type="text" name="interfaceVersion" id="interfaceVersion" value="1.0.0.6"/>
+        <input type="text" name="tranData" id="tranData" value="<{$order_info.payment_info.tranData|raw}>"/>
+        <input type="text" name="merSignMsg" id="merSignMsg" value="<{$order_info.payment_info.merSignMsg|raw}>"/>
+        <input type="text" name="merCert" id="merCert" value="<{$order_info.payment_info.merCert|raw}>"/>
+        <input type="text" name="clientType" id="clientType" value="0"/>
+        <input type="submit" id="bt1" ,value="立即支付">
+    </form>
+</div>
+<script type="text/javascript">
+    function callpay() {
+        document.getElementById("bt1").click();
+    }
+
+    function blank() {
+        window.location.href = '<{$order_info.bank_url|raw}>';
+    }
+
+    $(function () {
+        $.cookie('success_url', '<{$order_info.success_url|raw}>', {expires: 0.5, path: '/'});
+    });
+</script>
+</body>
+</html>

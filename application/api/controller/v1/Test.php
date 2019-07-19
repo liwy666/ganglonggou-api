@@ -28,38 +28,16 @@ use think\facade\Log;
 
 class Test extends Controller
 {
+    /**
+     * @return mixed|string
+     */
     public function test()
     {
-
-//        $config = [
-//            'app_id' => 'wxcdc792b2207365e6',
-//            'mch_id' => '1408495802',
-//            'key' => 'ganglongkeji123ganglongkeji123ga',
-//            'cert_path' => 'C:\Users\administrator_liwy\Desktop\web\API\ganglonggou-api\cert\wxJsApi\apiclient_cert.pem',
-//            'key_path' => 'C:\Users\administrator_liwy\Desktop\web\API\ganglonggou-api\cert\wxJsApi\apiclient_key.pem',
-//            // ...
-//        ];
-//
-//        $payment = Factory::payment($config);
-//
-//        $redpack = $payment->redpack;
-//
-//        $redpackData = [
-//            'mch_billno' => 'test123456',
-//            'send_name' => '给山不转水转的红包',
-//            're_openid' => 'oNSO9wHBr-KbfKt0sNybs2wByWHY',
-//            'total_num' => 1,  //固定为1，可不传
-//            'total_amount' => 100,  //单位为分，不小于100
-//            'wishing' => '给山不转水转的红包',
-//            'client_ip' => '61.177.154.210',  //可不传，不传则由 SDK 取当前客户端 IP
-//            'act_name' => '测试活动',
-//            'remark' => '测试备注',
-//            // ...
-//        ];
-//
-//        $result = $redpack->sendNormal($redpackData);
-//        return $result;
-
+        $simple = "<?xml version=\"1.0\" encoding=\"GBK\" standalone=\"no\"?><B2CReq><interfaceName>ICBC_WAPB_B2C</interfaceName><interfaceVersion>1.0.0.6</interfaceVersion><orderInfo><orderDate>20190715142502</orderDate><orderid>SH201907121719562462568</orderid><amount>630000</amount><installmentTimes>1</installmentTimes><curType>001</curType><merID>1103EE20175012</merID><merAcct>1103028809200994418</merAcct></orderInfo><custom><verifyJoinFlag>0</verifyJoinFlag><Language></Language></custom><message><goodsID></goodsID><goodsName>0225545</goodsName><goodsNum>1</goodsNum><carriageAmt></carriageAmt><merHint></merHint><remark1></remark1><remark2></remark2><merURL>https://test-api-l.ganglonggou.com/addons/ewei_shop/payment/icbcpay/notify.php</merURL><merVAR>2:0</merVAR><notifyType>HS</notifyType><resultType>0</resultType></message></B2CReq>";
+        $p = xml_parser_create();
+        xml_parse_into_struct($p, $simple, $vals, $index);
+        xml_parser_free($p);
+        return $vals.[];
 
     }
 

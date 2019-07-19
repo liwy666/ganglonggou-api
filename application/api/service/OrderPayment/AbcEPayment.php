@@ -144,6 +144,4 @@ class AbcEPayment
         return view('/abcPayment')->assign('order_info', $order_info);
 
     }
-
-
 }

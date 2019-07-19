@@ -69,8 +69,9 @@ function send_post($url, $post_data)
     );
     $context = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
+    \think\facade\Log::record($result);
     $result = json_decode($result, true);
-
+    \think\facade\Log::record($result);
     return $result;
 }
 
