@@ -19,7 +19,7 @@ class GlGoods extends BaseModel
             market_price,shop_price,keywords,goods_brief,goods_desc,goods_stock,
             goods_img,original_img,sort_order,goods_sales_volume,evaluate_count,
             attribute,is_promote,promote_number,promote_start_date,promote_end_date,
-            supplier_id,supplier_name';//对外筛选后的商品信息
+            supplier_id,supplier_name,click_type,url';//对外筛选后的商品信息
 
     public function getOriginalImgAttr($value, $data)
     {
@@ -95,24 +95,48 @@ class GlGoods extends BaseModel
     /**
      * @param $supplier_id
      * @param $number
+     * @param $parent_id
      * @return array|\PDOStatement|string|\think\Collection
+     * @throws CommonException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      * 根据supplierID返回商品列表
      */
-    public static function giveGoodsListBySupplierId($supplier_id, $number)
+    public static function giveGoodsListBySupplierId($supplier_id, $number, $parent_id)
     {
-        return self::where([
-            ['supplier_id', '=', $supplier_id],
-            ['is_del', '=', 0],
-            ['is_on_sale', '=', 1],
-        ])
-            ->order(['click_count' => 'desc'])
-            ->field(self::$screenGoodsInfo)
-            ->limit($number)
-            ->select();
+        $result = Cache::get($parent_id . '_supplier_goods_list');
+        $debug = config('my_config.debug');
 
+        if (!$result || $debug) {
+            $cat_id_array_ = GlCategory::where(['parent_id' => $parent_id])
+                ->select()
+                ->toArray();
+            $cat_id_array = [];
+            if (count($cat_id_array_) > 0) {
+                foreach ($cat_id_array_ as $k => $v) {
+                    array_push($cat_id_array, $v['cat_id']);
+                }
+            } else {
+                throw new CommonException(['msg' => '无效的顶级分类']);
+            }
+            $where = [];
+            array_push($where, ['cat_id', 'in', $cat_id_array]);
+            array_push($where, ['supplier_id', '=', $supplier_id]);
+            array_push($where, ['is_on_sale', '=', 1]);
+            array_push($where, ['is_del', '=', 0]);
+
+            $result = self::where($where)
+                ->order(['click_count' => 'desc'])
+                ->field(self::$screenGoodsInfo)
+                ->limit($number)
+                ->select();
+
+            Cache::set($parent_id . '_supplier_goods_list', $result, config('my_config.sql_sel_cache_time'));
+        }
+
+
+        return $result;
     }
 
     /**

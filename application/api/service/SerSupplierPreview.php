@@ -9,6 +9,7 @@
 namespace app\api\service;
 
 
+use app\api\model\GlCategory;
 use app\api\model\GlGoods;
 use app\api\model\GlSupplier;
 
@@ -17,6 +18,7 @@ class SerSupplierPreview
     /**
      * @param $goods_id
      * @return array|\PDOStatement|string|\think\Model|null
+     * @throws \app\lib\exception\CommonException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -32,10 +34,15 @@ class SerSupplierPreview
             ['id', '=', $goods_info['supplier_id']],
             ['is_del', '=', 0]
         ])
-            ->field('allow_del,is_del',true)
+            ->field('allow_del,is_del', true)
             ->find();
 
-        $supplier_info['goods_list'] = GlGoods::giveGoodsListBySupplierId($goods_info['supplier_id'],6);
+        $parent_info = GlCategory::where([
+            ['cat_id', '=', $goods_info['cat_id']]
+        ])->find();
+
+
+        $supplier_info['goods_list'] = GlGoods::giveGoodsListBySupplierId($goods_info['supplier_id'], 6, $parent_info['parent_id']);
 
         return $supplier_info;
     }

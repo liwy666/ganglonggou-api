@@ -81,6 +81,8 @@ class CmsGoods
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_head_name'] = request()->param('goods_head_name');
         $data['click_count'] = 0;
+        $data['click_type'] = request()->param('click_type');
+        $data['url'] = request()->param('url');
         $data['promote_number'] = request()->param('promote_number');
         $data['promote_start_date'] = request()->param('promote_start_date');
         $data['promote_end_date'] = request()->param('promote_end_date');
@@ -323,6 +325,8 @@ class CmsGoods
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_head_name'] = request()->param('goods_head_name');
         $data['click_count'] = 0;
+        $data['click_type'] = request()->param('click_type');
+        $data['url'] = request()->param('url');
         $data['promote_number'] = request()->param('promote_number');
         $data['promote_start_date'] = request()->param('promote_start_date');
         $data['promote_end_date'] = request()->param('promote_end_date');
