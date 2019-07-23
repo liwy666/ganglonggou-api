@@ -16,6 +16,7 @@ use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
 use app\api\model\Test1;
 use app\api\model\Test2;
+use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
 use app\api\service\SerEmail;
 use app\lib\exception\CommonException;
@@ -30,11 +31,7 @@ class Test extends Controller
 {
     public function test()
     {
-
-//        $test = new Array();
-//        //$test['sd'] = 111;
-//        return $test;
-
+        return (new IcbcTest())->notifyProcess();
     }
 
 
