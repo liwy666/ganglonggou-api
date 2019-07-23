@@ -54,7 +54,7 @@ class GsyhPayment
         }
 
         $this->CreatTime= date("YmdHis",time());
-        $this->postResults = send_post("http://192.168.0.37:8080/gsyh/my2/jm.do",
+        $this->postResults = send_post("http://192.168.0.37:8080/ghdemo/my2/jm.do",
             ["createtime" =>$this->CreatTime,
                 "ordersn" => $order_info['order_sn'],
                 "orderprice" => $order_info['order_price']*100,
@@ -112,25 +112,29 @@ class GsyhPayment
      */
     public function notifyProcess()
     {
-        $merVAR=request()->param('merVAR');//银行返回商户变量
+        $notifyData = $_POST["notifyData"];//明文
+        $merVAR = $_POST['merVAR'];
+        $signMsg = $_POST['signMsg'];//签名
+
+       /* $merVAR=request()->param('merVAR');//银行返回商户变量
         $notifyData = request()->param('notifyData');//银行返回通知结果数据
-        $signMsg = request()->param('signMsg');//银行返回签名数据
-        Log::write($notifyData,'debug');
-        Log::write($signMsg,'debug');
+        $signMsg = request()->param('signMsg');//银行返回签名数据*/
+        Log::write("notifyData:".$notifyData,'debug');
+        Log::write("signMsg:".$signMsg,'debug');
+        Log::write("merVAR".$merVAR,'debug');
         $notifyDatamw=base64_decode($notifyData);
         log::write($notifyDatamw,'debug');
 
+        /* $r= send_post("http://192.168.0.37:8080/gsyh/my2/yq.do",
+             [
+                 'notifyDatamw' => $notifyDatamw,
+                 'signMsg' => $signMsg,
+             ]);
+         if($r){
+             $p=xml_parser_create();
+             xml_parse_into_struct($p,$notifyDatamw,$vals,$index);
 
-        $r= send_post("http://192.168.0.37:8080/gsyh/my2/yq.do",
-            [
-                'notifyDatamw' => $notifyDatamw,
-                'signMsg' => $signMsg,
-            ]);
-        if($r){
-            $p=xml_parser_create();
-            xml_parse_into_struct($p,$notifyDatamw,$vals,$index);
-
-        }
+         }*/
       /*  require($this->file . 'Result.php');
 
         $tResult = new \Result();
