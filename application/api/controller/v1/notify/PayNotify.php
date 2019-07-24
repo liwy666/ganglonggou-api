@@ -43,12 +43,23 @@ class PayNotify
 
     /**
      * @throws \Exception
-     * 支付宝回调
+     * PC支付宝回调
      */
     public function aliPayNotify()
     {
 
         $result = (new PcAliPayment())->notifyProcess();
+
+        return $result;
+    }
+    /**
+     * @throws \Exception
+     * web支付宝回调
+     */
+    public function WaliPayNotify()
+    {
+
+        $result = (new WAliPayment())->notifyProcess();
 
         return $result;
     }
@@ -63,4 +74,5 @@ class PayNotify
 
         return $result;
     }
+
 }
