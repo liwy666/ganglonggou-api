@@ -15,6 +15,7 @@ class IcbcTest
 {
 
     private $file;
+    static $iMerchantCertificates;
 
     public function __construct()
     {
@@ -51,76 +52,46 @@ class IcbcTest
 
     public function notifyProcess()
     {
-        $cert = $this->getCert();
         $pass = '123456789';
-        $notifyData = 'PD94bWwgIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IkdCSyIgc3RhbmRhbG9uZT0ibm8iID8+PEIyQ1Jlcz48aW50ZXJmYWNlTmFtZT5JQ0JDX1dBUEJfQjJDPC9pbnRlcmZhY2VOYW1lPjxpbnRlcmZhY2VWZXJzaW9uPjEuMC4wLjY8L2ludGVyZmFjZVZlcnNpb24+PG9yZGVySW5mbz48b3JkZXJEYXRlPjIwMTkwNzIyMDkxNzU2PC9vcmRlckRhdGU+PG9yZGVyaWQ+MTU2Mzc1ODI3NFdMU0lHRTwvb3JkZXJpZD48YW1vdW50PjE8L2Ftb3VudD48aW5zdGFsbG1lbnRUaW1lcz4xPC9pbnN0YWxsbWVudFRpbWVzPjxtZXJBY2N0PjExMDMwMjg4MDkyMDA5OTQ0MTg8L21lckFjY3Q+PG1lcklEPjExMDNFRTIwMTc1MDEyPC9tZXJJRD48Y3VyVHlwZT4wMDE8L2N1clR5cGU+PHZlcmlmeUpvaW5GbGFnPjA8L3ZlcmlmeUpvaW5GbGFnPjxKb2luRmxhZz4wPC9Kb2luRmxhZz48VXNlck51bT48L1VzZXJOdW0+PC9vcmRlckluZm8+PGJhbms+PFRyYW5TZXJpYWxObz5IRVowMDAwMDg3Njc3OTU2NzY8L1RyYW5TZXJpYWxObz48bm90aWZ5RGF0ZT4yMDE5MDcyMjA5MjAzNzwvbm90aWZ5RGF0ZT48dHJhblN0YXQ+MTwvdHJhblN0YXQ+PGNvbW1lbnQ+vbvS17PJuaajrNLRx+XL46OhPC9jb21tZW50PjwvYmFuaz48L0IyQ1Jlcz4=';//明文
+        $notifyData = 'PD94bWwgIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IkdCSyIgc3RhbmRhbG9uZT0ibm8iID8+PEIyQ1Jlcz48aW50ZXJmYWNlTmFtZT5JQ0JDX1dBUEJfQjJDPC9pbnRlcmZhY2VOYW1lPjxpbnRlcmZhY2VWZXJzaW9uPjEuMC4wLjY8L2ludGVyZmFjZVZlcnNpb24+PG9yZGVySW5mbz48b3JkZXJEYXRlPjIwMTkwNzIyMDkxNzU2PC9vcmRlckRhdGU+PG9yZGVyaWQ+MTU2Mzc1ODI3NFdMU0lHRTwvb3JkZXJpZD48YW1vdW50PjE8L2Ftb3VudD48aW5zdGFsbG1lbnRUaW1lcz4xPC9pbnN0YWxsbWVudFRpbWVzPjxtZXJBY2N0PjExMDMwMjg4MDkyMDA5OTQ0MTg8L21lckFjY3Q+PG1lcklEPjExMDNFRTIwMTc1MDEyPC9tZXJJRD48Y3VyVHlwZT4wMDE8L2N1clR5cGU+PHZlcmlmeUpvaW5GbGFnPjA8L3ZlcmlmeUpvaW5GbGFnPjxKb2luRmxhZz4wPC9Kb2luRmxhZz48VXNlck51bT48L1VzZXJOdW0+PC9vcmRlckluZm8+PGJhbms+PFRyYW5TZXJpYWxObz5IRVowMDAwMDg3Njc3OTU2NzY8L1RyYW5TZXJpYWxObz48bm90aWZ5RGF0ZT4yMDE5MDcyMjA5MjAzNzwvbm90aWZ5RGF0ZT48dHJhblN0YXQ+MTwvdHJhblN0YXQ+PGNvbW1lbnQ+vbvS17PJuaajrNLRx+XL46OhPC9jb21tZW50PjwvYmFuaz48L0IyQ1Jlcz4=';
         $merVAR = '01';
         $signMsg = '+jrBfLXhkIiYmzNi8u6PSFzRTTaonynWaWZh77gmnt/AAYgDgZsKi1m55/8lBGRp29Mv4Q21aLBsm657aut1tf48yoCB7pRN3+kLkEiQd2hYFT+PVOzCE3AjSPRlSUW4xse8460T/IBYz9m79ouJoZF33XB8sR9wG+pZaV4N99E=';//签名
 
 //        Log::write(base64_decode($notifyData), 'debug');
 //        return true;
 
-        return $this->sign(base64_decode($notifyData), $cert, $signMsg);
+        $private_key = self::bindMerchantCertificateByFile();
+        openssl_sign(base64_decode($notifyData), $signature, $private_key, OPENSSL_ALGO_SHA1);
+        $signature = base64_encode($signature);
+        return $signature;
+
     }
 
-    function sign($data, $cert, $sign)
+    private static function bindMerchantCertificateByFile()
     {
-        $tSign = base64_decode($sign);
-        $key = openssl_pkey_get_public($cert);
-        $data = strval($data);
+        $tMerchantCertFiles = 'C:\Users\administrator_liwy\Desktop\web\API\ganglonggou-api\cert\Icbc\2019_04_15.pfx';
+        $tMerchantCertPasswords = '123456';
 
-        return openssl_verify($data, $tSign, $key, OPENSSL_ALGO_SHA256);
-    }
+        $tMerchantCertFileArray = array_filter(array_map('trim', explode(',', $tMerchantCertFiles, 100)));
+        $tMerchantCertPasswordArray = array_filter(array_map('trim', explode(',', $tMerchantCertPasswords, 100)));
 
-}
-
-function coverParamsToString($params)
-{
-    $sign_str = '';
-    ksort($params);
-    foreach ($params as $key => $val) {
-        if ($key == 'signature') {
-            continue;
+        $iMerchantCertificates = array();
+        $iMerchantKeys = array();
+        for ($i = 0; $i <= 1; $i++) {
+            //1、读取证书
+            $tCertificate = array();
+            if (openssl_pkcs12_read(file_get_contents($tMerchantCertFileArray[$i]), $tCertificate, $tMerchantCertPasswordArray[$i])) {
+                //2、验证证书是否在有效期内
+                $cer = openssl_x509_parse($tCertificate['cert']);
+                $t = time();
+                self:: $iMerchantCertificates[] = $tCertificate;
+                //3、取得密钥
+                $pkey = openssl_pkey_get_private($tCertificate['pkey']);
+                if ($pkey) {
+                    return $pkey;
+                }
+            }
         }
-        $sign_str .= sprintf("%s=%s&", $key, $val);
-    }
-    return substr($sign_str, 0, strlen($sign_str) - 1);
-}
-
-function der2pem($der_data)
-{
-    $pem = chunk_split(base64_encode($der_data), 64, "\n");
-    $pem = "-----BEGIN CERTIFICATE-----\n" . $pem . "-----END CERTIFICATE-----\n";
-    return $pem;
-}
-
-function getPrivateKey($cert_path)
-{
-    $pkcs12 = file_get_contents($cert_path);
-    openssl_pkcs12_read($pkcs12, $certs, '123456789');
-    return $certs ['pkey'];
-}
-
-function xmlToArray($xml)
-{
-    //禁止引用外部xml实体
-    libxml_disable_entity_loader(true);
-    $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-    return $values;
-}
-
-function sign(&$params)
-{
-
-    $params_str = coverParamsToString($params);
-
-
-    $params_sha1x16 = sha1($params_str, FALSE);
-    $cert_path = SDK_SIGN_CERT_PATH;
-    $private_key = getPrivateKey($cert_path);
-    $sign_falg = openssl_sign($params_sha1x16, $signature, $private_key, OPENSSL_ALGO_SHA1);
-    if ($sign_falg) {
-        $signature_base64 = base64_encode($signature);
-        return $signature_base64;
     }
 }
+
