@@ -55,6 +55,9 @@ class Index
             case 'kettle_mobile':
                 $parent_id = 0;
                 break;
+            case 'computer_mobile':
+                $parent_id = 0;
+                break;
             default:
                 throw new CommonException(['msg' => '无此入口']);
         }
