@@ -70,7 +70,7 @@ class CmsGoods
 
         //验证必要
         (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_name', 'promote_number', 'promote_start_date'
-            , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale'
+            , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale', 'click_type'
             , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array'], 'require');
         //验证正整数
         (new CurrencyValidate())->myGoCheck(['cat_id', 'supplier_id'], 'positiveInt');
@@ -81,6 +81,7 @@ class CmsGoods
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_head_name'] = request()->param('goods_head_name');
         $data['click_count'] = 0;
+        $data['click_type'] = request()->param('click_type');
         $data['promote_number'] = request()->param('promote_number');
         $data['promote_start_date'] = request()->param('promote_start_date');
         $data['promote_end_date'] = request()->param('promote_end_date');
@@ -310,7 +311,7 @@ class CmsGoods
     {
         //验证必要
         (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_name', 'promote_number', 'promote_start_date'
-            , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale'
+            , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale', 'click_type'
             , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array', 'goods_id'], 'require');
         //验证正整数
         (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_id', 'supplier_id'], 'positiveInt');
@@ -323,6 +324,7 @@ class CmsGoods
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_head_name'] = request()->param('goods_head_name');
         $data['click_count'] = 0;
+        $data['click_type'] = request()->param('click_type');
         $data['promote_number'] = request()->param('promote_number');
         $data['promote_start_date'] = request()->param('promote_start_date');
         $data['promote_end_date'] = request()->param('promote_end_date');
@@ -417,11 +419,30 @@ class CmsGoods
         array_push($where, ['goods_name', 'like', '%' . request()->param('goods_name') . '%']);
         array_push($where, ['is_del', '=', 0]);
         array_push($where, ['is_on_sale', '=', 1]);
-        $result = GlGoods::where($where)
-            ->field('goods_id,concat_ws(\'&\',goods_head_name,goods_name) as goods_name')
+//        $result = GlGoods::where($where)
+//            ->field('goods_id,concat_ws(\'&\',goods_head_name,goods_name) as goods_name')
+//            ->select();
+        $category_array = GlCategory::select();
+        $goods_list = GlGoods::where($where)
+            ->field('goods_id,goods_name,cat_id')
             ->select();
 
-        return $result;
+        foreach ($goods_list as $k_g => $v_g) {
+            foreach ($category_array as $k_c => $v_c) {
+                if ($v_g['cat_id'] === $v_c['cat_id']) {
+                    $goods_list[$k_g]['parent_id'] = $v_c['parent_id'];
+                }
+            }
+        }
+        foreach ($goods_list as $k_g => $v_g) {
+            foreach ($category_array as $k_c => $v_c) {
+                if ($v_g['parent_id'] === $v_c['cat_id']) {
+                    $goods_list[$k_g]['goods_name'] = $v_c['cat_name'] . '&' . $v_g['goods_name'];
+                }
+            }
+        }
+
+        return $goods_list;
 
     }
 

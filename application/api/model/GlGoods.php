@@ -19,7 +19,7 @@ class GlGoods extends BaseModel
             market_price,shop_price,keywords,goods_brief,goods_desc,goods_stock,
             goods_img,original_img,sort_order,goods_sales_volume,evaluate_count,
             attribute,is_promote,promote_number,promote_start_date,promote_end_date,
-            supplier_id,supplier_name';//对外筛选后的商品信息
+            supplier_id,supplier_name,add_time';//对外筛选后的商品信息
 
     public function getOriginalImgAttr($value, $data)
     {

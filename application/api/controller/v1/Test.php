@@ -31,22 +31,10 @@ class Test extends Controller
 {
     public function test()
     {
-        $tmt_mobile_array = GlIndexAd::where([
-            'into_type' => 'tmt_mobile'
-        ])
-            ->select()
-            ->toArray();
-
-        $computer_mobile_array = [];
-
-        foreach ($tmt_mobile_array as $k => $v) {
-            $item = $this->byKeyrRemoveArrVal($v, 'id');
-            $item['into_type'] = 'computer_mobile';
-            $item['ad_img'] = removeImgUrl($item['ad_img']);
-            GlIndexAd::create($item);
-        }
-
-        return true;
+        throw new CommonException([
+           'msg'=>'错误'
+        ]);
+        //return true;
     }
 
 

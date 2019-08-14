@@ -72,18 +72,20 @@ class CmsClassifyAd
     public function addClassify()
     {
         //验证必要
-        (new CurrencyValidate())->myGoCheck(['classify_name', 'into_type', 'parent_id', 'sort_order'], 'require');
+        (new CurrencyValidate())->myGoCheck(['classify_name', 'into_type', 'parent_id', 'sort_order','click_type'], 'require');
         //验证正整数
         (new CurrencyValidate())->myGoCheck(['sort_order'], 'positiveInt');
         UserAuthority::checkAuthority(8);
         $data['classify_name'] = request()->param('classify_name');
         $data['into_type'] = request()->param('into_type');
+        $data['click_type'] = request()->param('click_type');
         $data['parent_id'] = request()->param('parent_id');
         $data['sort_order'] = request()->param('sort_order');
-        $data['group_name'] = request()->param('group_name');
-        $data['img_url'] = removeImgUrl(request()->param('img_url'));
+        $data['logo_img'] = removeImgUrl(request()->param('logo_img'));
+        $data['bar_img'] = removeImgUrl(request()->param('bar_img'));
         $data['sort_order'] = request()->param('sort_order');
         $data['key_word'] = request()->param('key_word');
+        $data['goods_id'] = request()->param('goods_id');
 
         GlClassifyAd::create($data);
 
@@ -107,12 +109,14 @@ class CmsClassifyAd
         UserAuthority::checkAuthority(8);
         $data['classify_name'] = request()->param('classify_name');
         $data['into_type'] = request()->param('into_type');
+        $data['click_type'] = request()->param('click_type');
         $data['parent_id'] = request()->param('parent_id');
         $data['sort_order'] = request()->param('sort_order');
-        $data['group_name'] = request()->param('group_name');
-        $data['img_url'] = removeImgUrl(request()->param('img_url'));
+        $data['logo_img'] = removeImgUrl(request()->param('logo_img'));
+        $data['bar_img'] = removeImgUrl(request()->param('bar_img'));
         $data['sort_order'] = request()->param('sort_order');
         $data['key_word'] = request()->param('key_word');
+        $data['goods_id'] = request()->param('goods_id');
 
         GlClassifyAd::where([
             ['id', '=', request()->param('id')]
@@ -145,12 +149,13 @@ class CmsClassifyAd
         return true;
     }
 
-    public function manualAddClassify(){
+    public function manualAddClassify()
+    {
 
 
-        $array_data = json_decode(request()->param('data'),true);
+        $array_data = json_decode(request()->param('data'), true);
 
-        foreach ($array_data as $k => $v){
+        foreach ($array_data as $k => $v) {
             GlClassifyAd::create($v);
         }
 
