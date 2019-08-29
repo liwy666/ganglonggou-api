@@ -230,6 +230,9 @@ class CmsIndexAd
         $data['sort_order'] = request()->param('sort_order');
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_price'] = request()->param('goods_price');
+        if (request()->param('origin_goods_price')) {
+            $data['origin_goods_price'] = request()->param('origin_goods_price');
+        }
         $data['url'] = request()->param('url');
 
         //更新
