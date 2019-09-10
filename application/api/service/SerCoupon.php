@@ -45,13 +45,13 @@ class SerCoupon
                 array_push($result, $v);
             } elseif ($v["grant_type"] === "classify") {//商品分类券
                 foreach ($v['classify'] as $k2 => $v2) {
-                    if ($goods_info['cat_id'] === $v2) {
+                    if ($goods_info['cat_id']+0 === $v2+0) {
                         array_push($result, $v);
                     }
                 }
             } elseif ($v["grant_type"] === "solo") {//单个商品券
                 foreach ($v['solo'] as $k2 => $v2) {
-                    if ($v2 === $goods_id) {
+                    if ($v2+0 === $goods_id+0) {
                         array_push($result, $v);
                     }
                 }

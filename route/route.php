@@ -240,3 +240,15 @@ Route::post('api/:version/mobile_register_check$', 'api/:version.common.Register
 Route::post('api/:version/mobile_register$', 'api/:version.common.Register/mobileRegister');
 //手机端登录
 Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
+
+/*阅读打卡*/
+//获取用户信息
+Route::get('api/:version/article_sign_get_user_info$', 'api/:version.article_sign.User/giveUserInfo');
+//开始签到
+Route::post('api/:version/article_sign_sign$', 'api/:version.article_sign.User/sign');
+//开始签到
+Route::post('api/:version/article_sign_join_activity$', 'api/:version.article_sign.User/joinActivity');
+//查看用户表
+Route::get('api/:version/cms/article_sign_get_user_list$', 'api/:version.article_sign.Cms/giveUserList');
+//创建分享链接
+Route::post('api/:version/cms/create_share_url$', 'api/:version.article_sign.Cms/createShareUrl');

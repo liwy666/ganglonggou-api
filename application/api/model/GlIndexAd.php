@@ -36,7 +36,8 @@ class GlIndexAd extends BaseModel
                 ->order(['position_type', 'sort_order' => 'desc'])
                 ->select();
 
-            Cache::set($into_type . '_user_ad_index_list', $result, config('my_config.sql_sel_cache_time'));
+            //Cache::set($into_type . '_user_ad_index_list', $result, config('my_config.sql_sel_cache_time'));
+            Cache::set($into_type . '_user_ad_index_list', $result, 0);
         }
         return $result;
     }

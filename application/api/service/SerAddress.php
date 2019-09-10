@@ -51,9 +51,11 @@ class SerAddress
         $address_info = GlAddress::create($data);
 
         //判断是否有默认地址
-        $check_is_default = GlAddress::where([['user_id', '=', $this->userId]
+        $check_is_default = GlAddress::where([
+            ['user_id', '=', $this->userId]
             , ['is_del', '=', 0]
-            , ['is_default', '=', 1]])
+            , ['is_default', '=', 1]
+        ])
             ->find();
         if (!$check_is_default) {
             GlAddress::where([['address_id', '=', $address_info->id]])
@@ -83,13 +85,13 @@ class SerAddress
         $data['upd_time'] = time();
 
 
-        $upd_number =  GlAddress::where([['user_id', '=', $this->userId]
+        $upd_number = GlAddress::where([['user_id', '=', $this->userId]
             , ['address_id', '=', $this->addressId]
             , ['is_del', '=', 0]])
             ->update($data);
 
-        if($upd_number < 1){
-            throw new CommonException(['msg'=> '操作失败']);
+        if ($upd_number < 1) {
+            throw new CommonException(['msg' => '操作失败']);
         }
 
         return true;

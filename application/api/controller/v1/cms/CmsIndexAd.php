@@ -83,6 +83,10 @@ class CmsIndexAd
         $data['click_count'] = 0;
         $data['is_on_sale'] = 1;
 
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
+        }
+
         //第二次验证
         if ($data['ad_type'] === '商品ID') {
             (new CurrencyValidate())->myGoCheck(['goods_id'], 'require');
@@ -137,6 +141,12 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         $data['origin_goods_price'] = request()->param('origin_goods_price');
         $data['url'] = request()->param('url');
+
+
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
+        }
+
         //第二次验证
         if ($data['ad_type'] === '商品ID') {
             (new CurrencyValidate())->myGoCheck(['goods_id'], 'require');
@@ -232,6 +242,9 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         if (request()->param('origin_goods_price')) {
             $data['origin_goods_price'] = request()->param('origin_goods_price');
+        }
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
         }
         $data['url'] = request()->param('url');
 
