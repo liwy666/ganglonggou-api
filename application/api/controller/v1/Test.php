@@ -33,16 +33,8 @@ class Test extends Controller
     public function test()
     {
 
-        $value = 15675264000000;
 
-
-        return is_int(($value + 0));
-
-        if (is_int(($value + 0)) && ($value + 0) > 0) {
-            return true;
-        } else {
-            return '标识ID必须为正整数';
-        }
+        throw  new CommonException(['msg'=>"s",'error_code'=>"20000"]);
     }
 
 

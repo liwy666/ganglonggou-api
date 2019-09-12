@@ -92,7 +92,7 @@ class CmsGoods
         $data['original_img'] = removeImgUrl(request()->param('original_img'));
         $data['is_on_sale'] = request()->param('is_on_sale');
         $data['add_time'] = time();
-        $data['sort_order'] = 99;
+        $data['sort_order'] = request()->param('sort_order');
         $data['is_del'] = 0;
         $data['is_best'] = request()->param('is_best');
         $data['is_new'] = request()->param('is_new');
@@ -312,9 +312,9 @@ class CmsGoods
         //验证必要
         (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_name', 'promote_number', 'promote_start_date'
             , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale', 'click_type'
-            , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array', 'goods_id'], 'require');
+            , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array', 'goods_id','sort_order'], 'require');
         //验证正整数
-        (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_id', 'supplier_id'], 'positiveInt');
+        (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_id', 'supplier_id','sort_order'], 'positiveInt');
 
         UserAuthority::checkAuthority(8);
 
@@ -323,7 +323,6 @@ class CmsGoods
         $data['cat_id'] = request()->param('cat_id');
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_head_name'] = request()->param('goods_head_name');
-        $data['click_count'] = 0;
         $data['click_type'] = request()->param('click_type');
         $data['promote_number'] = request()->param('promote_number');
         $data['promote_start_date'] = request()->param('promote_start_date');
@@ -334,7 +333,7 @@ class CmsGoods
         $data['goods_img'] = removeImgUrl(request()->param('goods_img'));
         $data['original_img'] = removeImgUrl(request()->param('original_img'));
         $data['is_on_sale'] = request()->param('is_on_sale');
-        $data['sort_order'] = 99;
+        $data['sort_order'] = request()->param('sort_order');
         $data['is_del'] = 0;
         $data['is_best'] = request()->param('is_best');
         $data['is_new'] = request()->param('is_new');

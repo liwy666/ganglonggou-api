@@ -76,6 +76,7 @@ class GlGoods extends BaseModel
 
             $result = self::where($where)
                 ->field(self::$screenGoodsInfo)
+                ->order(['sort_order' => 'desc'])
                 ->select()
                 ->toArray();
 
