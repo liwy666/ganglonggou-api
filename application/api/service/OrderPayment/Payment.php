@@ -358,11 +358,11 @@ class Payment
                 //正式用
                 $address_array = [
                     '987303897@qq.com',
+                    '382506262@qq.com',
                     '3001374619@qq.com',
                     '3001397358@qq.com',
                     '3001306821@qq.com',
                     '3004391423@qq.com',
-                    '811718475@qq.com'
                 ];
             } else {
                 //测试用
@@ -396,11 +396,11 @@ class Payment
             //正式用
             $address_array = [
                 '987303897@qq.com',
+                '382506262@qq.com',
                 '3001374619@qq.com',
                 '3001397358@qq.com',
                 '3001306821@qq.com',
                 '3004391423@qq.com',
-                '811718475@qq.com'
             ];
         } else {
             //测试用

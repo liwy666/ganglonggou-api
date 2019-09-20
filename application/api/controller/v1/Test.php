@@ -26,15 +26,23 @@ use Naixiaoxin\ThinkWechat\Facade;
 use Noodlehaus\Config;
 use think\Controller;
 use think\Db;
-use think\facade\Log;
 
 class Test extends Controller
 {
     public function test()
     {
+        $data_array = GlIndexAd::where([
+            'into_type' => 'new_iphone'
+        ])->select()->toArray();
 
+        foreach ($data_array as $key => $value) {
+            $value = byKeyRemoveArrVal($value, "id");
+            $value["into_type"] = "new_iphone_twenty_four";
+            $value["ad_img"] = removeImgUrl($value["ad_img"]);
+            GlIndexAd::create($value);
+        }
 
-        throw  new CommonException(['msg'=>"s",'error_code'=>"20000"]);
+        return true;
     }
 
 

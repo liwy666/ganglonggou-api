@@ -55,6 +55,9 @@ class Index
             case 'new_iphone':
                 $parent_id = 0;
                 break;
+            case 'new_iphone_twenty_four':
+                $parent_id = 0;
+                break;
             case 'kettle_mobile':
                 $parent_id = 0;
                 break;
