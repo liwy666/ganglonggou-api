@@ -15,6 +15,8 @@ use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
 use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
+use Exception;
+
 
 class Index
 {
@@ -33,7 +35,8 @@ class Index
         //验证必要
         (new CurrencyValidate())->myGoCheck(['into_type'], 'require');
         $into_type = request()->param('into_type');
-        switch ($into_type) {
+
+        /*switch ($into_type) {
             case 'abc':
                 $parent_id = 154;
                 break;
@@ -72,7 +75,13 @@ class Index
                 break;
             default:
                 throw new CommonException(['msg' => '无此入口']);
-        }
+        }*/
+        try {
+            $parent_id = config('my_config.parentId_by_intoType')[$into_type];
+        } catch (Exception $e) {
+            throw new CommonException(['msg' => '无此入口']);
+        };
+
 
         $result['ad_list'] = GlIndexAd::giveIndexAdListByIntoType($into_type);
 

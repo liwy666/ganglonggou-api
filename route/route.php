@@ -124,6 +124,7 @@ Route::post('api/:version/cms/clean_user_goods_list_cache$', 'api/:version.Clean
 Route::post('api/:version/cms/clean_user_index_ad_list_cache$', 'api/:version.CleanCache/CleanUserIndexAdListCache');
 Route::post('api/:version/cms/clean_user_cat_list_cache$', 'api/:version.CleanCache/CleanUserCatListCache');
 Route::post('api/:version/cms/clean_user_classify_cache$', 'api/:version.CleanCache/CleanUserClassifyListCache');
+Route::post('api/:version/cms/clean_user_article_cache$', 'api/:version.CleanCache/CleanUserArticleCache');
 /*分类展示*/
 Route::get('api/:version/cms/cms_get_classify_ad_list$', 'api/:version.cms.CmsClassifyAd/giveListByPage');
 Route::get('api/:version/cms/cms_get_parent_classify_ad_list$', 'api/:version.cms.CmsClassifyAd/giveParentClassify');

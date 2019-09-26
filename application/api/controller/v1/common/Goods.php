@@ -17,6 +17,7 @@ use app\api\service\SerCoupon;
 use app\api\service\SerSupplierPreview;
 use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
+use Exception;
 
 class Goods
 {
@@ -36,9 +37,14 @@ class Goods
         (new CurrencyValidate())->myGoCheck(['goods_id', 'into_type'], 'require');
         //验证正整数
         (new CurrencyValidate())->myGoCheck(['goods_id'], 'positiveInt');
-
         $data['goods_id'] = request()->param('goods_id');
         $into_type = request()->param('into_type');
+
+        try {
+            $parent_id = config('my_config.parentId_by_intoType')[$into_type];
+        } catch (Exception $e) {
+            throw new CommonException(['msg' => '无此入口']);
+        };
 
         $result['goods_gallery'] = GlGoodsGallery::where($data)
             ->select();
@@ -48,7 +54,7 @@ class Goods
 
         $result['coupon_list'] = (new SerCoupon())->giveUsableCouponByGoodsIdAndIntoType($data['goods_id'], $into_type);
 
-        $result['supplier_preview_info'] = (new SerSupplierPreview())->giveSupplierPreviewByGoodsId($data['goods_id']);
+        $result['supplier_preview_info'] = (new SerSupplierPreview())->giveSupplierPreviewByGoodsId($data['goods_id'], $parent_id);
 
         //增加点击量
         GlGoods::where($data)->setInc('click_count');

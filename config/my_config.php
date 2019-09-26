@@ -69,4 +69,19 @@ return [
     'bdAppId' => $json_array['bdAppId'],
     'lbAppKey' => $json_array['lbAppKey'],
     'bdAppKey' => $json_array['bdAppKey'],
+    /*入口对应parent_id*/
+    'parentId_by_intoType' => array(
+        'abc' => 154,
+        'wx' => 168,
+        '3c618mobile' => 0,
+        '3c618pc' => 0,
+        '3c_mobile' => 0,
+        'tmt_mobile' => 0,
+        'new_iphone' => 0,
+        'new_iphone_twenty_four' => 0,
+        'kettle_mobile' => 0,
+        'computer_mobile' => 0,
+        'appliances_mobile' => 0,
+        'new_3c_mobile' => 0
+    )
 ];
