@@ -9,17 +9,22 @@
 namespace app\api\controller\v1;
 
 
+use app\api\model\GlAfterSale;
 use app\api\model\GlArticleSignUser;
 use app\api\model\GlCategory;
 use app\api\model\GlGoods;
 use app\api\model\GlGoodsSku;
 use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
+use app\api\model\GlOrder;
 use app\api\model\Test1;
 use app\api\model\Test2;
+use app\api\service\Login\BaseLogin;
 use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
+use app\api\service\SerAfterSale;
 use app\api\service\SerEmail;
+use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
 use EasyWeChat\Factory;
 use Naixiaoxin\ThinkWechat\Facade;
@@ -31,21 +36,55 @@ class Test extends Controller
 {
     public function test()
     {
-        $data_array = GlIndexAd::where([
-            'into_type' => 'new_iphone'
-        ])->select()->toArray();
-
-        foreach ($data_array as $key => $value) {
-            $value = byKeyRemoveArrVal($value, "id");
-            $value["into_type"] = "new_iphone_twenty_four";
-            $value["ad_img"] = removeImgUrl($value["ad_img"]);
-            GlIndexAd::create($value);
-        }
-
         return true;
     }
 
 
+    /**
+     * @return bool
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     *创建zip
+     */
+    private function createZip()
+    {
+        /*获取数据*/
+        $index_ad_date = GlIndexAd::giveIndexAdListByIntoType('tmt_mobile')->toArray();
+        /*将图片添加到zip*/
+        $zip = new \ZipArchive();
+        if ($zip->open(config('my_config.public_file') . time() . rand(100, 999) . '.zip', \ZipArchive::CREATE) !== TRUE) {
+            throw new CommonException(['msg' => '无效zip路径']);
+        }
+        if (is_array($index_ad_date)) {
+            foreach ($index_ad_date as $key => $value) {
+                $img_name = str_replace(config('my_config.img_url'), '', $value['ad_img']);
+                $img_file = config('my_config.img_file') . $img_name;
+                if (file_exists($img_file)) {
+                    $zip->addFile($img_file, 'images/' . $img_name);
+                    $index_ad_date[$key]['ad_img'] = './images/' . $img_name;
+                }
+
+            }
+        }
+        /*生成js文件*/
+        $data_js_name = config('my_config.public_file') . "temp/data" . time() . rand(100, 999) . ".js";
+        $data_js = fopen($data_js_name, "w");
+        fwrite($data_js, "var data = '" . json_encode($index_ad_date, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "';");
+        fclose($data_js);
+        $zip->addFile($data_js_name, 'js/data.js');
+        $zip->close();
+        //删除临时js
+        if (file_exists($data_js_name)) {
+            unlink($data_js_name);
+        }
+        return true;
+    }
+
+    /**
+     * @return string
+     */
     private function sendEmailTest()
     {
 

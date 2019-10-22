@@ -35,6 +35,7 @@ class Payment
     protected $byStagesInfo;//分期方式信息
     public $successUrl;
     public $backUrl;
+    public $payTime;
 
     public function __construct()
     {

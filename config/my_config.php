@@ -18,6 +18,8 @@ return [
     'img_file' => dirname(\think\facade\Env::get('root_path')) . '/images/',
     //图片服务器Url
     'img_url' => $json_array['img_url'],
+    //download目录
+    'public_file'=>dirname(\think\facade\Env::get('root_path')).'/main/public/download/',
     //apiUrl
     'api_url' => $json_array['api_url'],
     //日志文件
@@ -45,7 +47,9 @@ return [
         'abc_wx' => '农行微信端',
         'abc_app' => '农行app端',
         'wx' => 'wx端',
-        'pc' => 'pc端'
+        'pc' => 'pc端',
+        'android' => 'android端',
+        'ios' => 'ios端',
     ),
     //订单状态对应名称0已取消，1未支付，2已支付未发货，3已支付已发货，4已支付已收货，5已评价，6申请售后，7售后失败，8售后成功
     'order_state_name' => array(
@@ -61,6 +65,7 @@ return [
     ),
     'logistics_code_name' => array(
         'shunfeng' => '顺丰速递',
+        'youzhenxiaobao' => '顺丰速递',
     ),
     /*sql查询默认缓存时间，24小时s*/
     'sql_sel_cache_time' => 86400,
@@ -79,6 +84,7 @@ return [
         'tmt_mobile' => 0,
         'new_iphone' => 0,
         'new_iphone_twenty_four' => 0,
+        'new_iphone_drop' => 0,
         'kettle_mobile' => 0,
         'computer_mobile' => 0,
         'appliances_mobile' => 0,

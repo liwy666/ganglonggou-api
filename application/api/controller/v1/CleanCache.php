@@ -17,7 +17,6 @@ class CleanCache
 {
     public function CleanUserGoodsListCache()
     {
-        //先清除商品缓存
         $cat_array = GlCategory::where([
             ['parent_id', '<>', 0]
         ])
@@ -25,8 +24,6 @@ class CleanCache
         foreach ($cat_array as $k => $v) {
             Cache::rm($v['parent_id'] . '_user_goods_list');
         }
-        //再清除供应商预览缓存缓存
-        Cache::rm($into_type . '_user_ad_index_list');
 
         return true;
     }

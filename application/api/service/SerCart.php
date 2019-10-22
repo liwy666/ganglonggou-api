@@ -44,6 +44,7 @@ class SerCart
             $result["goods_head_name"] = $this->goodsInfo ->goods_head_name;//商品头
             $result["goods_number"] = $cart_info["goods_number"];//所选商品数量
             $result["goods_stock"] = $this->skuInfo ->sku_stock;
+            $result["sku_id"] = $this->skuInfo ->sku_id;
             $result["attr_desc"] = $this->skuInfo ->sku_desc;
             $result["one_give_integral"] = $this->skuInfo ->give_integral;
             $result["one_integral"] = $this->skuInfo ->integral;

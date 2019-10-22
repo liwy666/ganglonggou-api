@@ -86,6 +86,7 @@ Route::post('api/:version/cms/cms_upd_ad_img$', 'api/:version.cms.CmsIndexAd/upd
 Route::rule('api/:version/cms/cms_upd_ad_img$', 'api/:version.Option/returnTrue', 'OPTIONS');
 Route::post('api/:version/cms/cms_ease_upd_index_ad$', 'api/:version.cms.CmsIndexAd/easeUpdIndexAd');
 Route::get('api/:version/cms/cms_get_into_count$', 'api/:version.cms.CmsIndexAd/giveIntoCountList');
+Route::get('api/:version/cms/cms_get_data_zip_url$', 'api/:version.cms.CmsIndexAd/getDataZipUrl');
 //下架广告
 Route::post('api/:version/cms/cms_end_of_index_ad$', 'api/:version.cms.CmsIndexAd/endOfSaleIndexAd');
 //上架广告
@@ -170,12 +171,6 @@ Route::get('api/:version/get_goods_info$', 'api/:version.common.Goods/giveGoodsI
 Route::get('api/:version/get_extra_goods_info$', 'api/:version.common.Goods/giveExtraGoodsInfo');
 //商品评价
 Route::get('api/:version/user_get_evaluate_by_goods_id_and_page$', 'api/:version.common.Evaluate/giveEvaluateListByGoodsIdAndPage');
-//登录
-Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
-Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
-Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
-Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
-Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 //领取优惠券
 Route::post('api/:version/user_get_coupon$', 'api/:version.common.Coupon/userGetCoupon');
 //用户优惠券
@@ -229,6 +224,16 @@ Route::post('api/:version/user_call_after_sale$', 'api/:version.common.AfterSale
 Route::get('api/:version/user_get_classify_ad_list$', 'api/:version.common.ClassifyAd/giveClassifyAdList');
 //获取文章
 Route::get('api/:version/user_get_article$', 'api/:version.common.Article/giveArticle');
+
+
+/*登录*/
+Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
+Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
+Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
+Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
+Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
+Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
+Route::post('api/:version/android_user_login$', 'api/:version.common.Login/androidLogin');
 //pc端获取请求code
 Route::get('api/:version/user_get_pc_login_code$', 'api/:version.common.Login/pcGetLoginCode');
 //pc端通过wxOpenid登录
@@ -239,8 +244,8 @@ Route::post('api/:version/wx_write_pc_token$', 'api/:version.common.Login/writeP
 Route::post('api/:version/mobile_register_check$', 'api/:version.common.Register/checkMobileRegister');
 //手机端注册
 Route::post('api/:version/mobile_register$', 'api/:version.common.Register/mobileRegister');
-//手机端登录
-Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
+
+
 
 /*阅读打卡*/
 //获取用户信息

@@ -226,7 +226,7 @@ class AbcPayment
         }
 
         $tRequest->request["OrderNo"] = $order_info["order_sn"]; //设定订单编号 （必要信息）
-        $tRequest->request["QueryDetail"] = "true"; //设定查询方式
+        $tRequest->request["QueryDetail"] = "true"; //是否查询详细信息
 
         $tResponse = $tRequest->postRequest();
 
@@ -246,6 +246,11 @@ class AbcPayment
                         $third_party_sn_array['abc_order_sn'] = $detail->getValue("VoucherNo");
                         $PaymentClass->OrderPaySuccess($third_party_sn_array);
                     }
+                    //更新订单支付时间
+                    Log::write('农行支付查询返回信息(订单号：' . $order_info['order_sn'] .
+                        'OrderDate：' . $detail->GetValue("OrderDate") .
+                        'OrderTime：' . $detail->GetValue("OrderTime") .
+                        ')', 'debug');
                     $result["msg"] = "该订单已经支付";
                     $result["success"] = true;
                     $result["status"] = $Status;

@@ -35,47 +35,6 @@ class Index
         //验证必要
         (new CurrencyValidate())->myGoCheck(['into_type'], 'require');
         $into_type = request()->param('into_type');
-
-        /*switch ($into_type) {
-            case 'abc':
-                $parent_id = 154;
-                break;
-            case 'wx':
-                $parent_id = 168;
-                break;
-            case '3c618mobile':
-                $parent_id = 0;
-                break;
-            case '3c618pc':
-                $parent_id = 0;
-                break;
-            case '3c_mobile':
-                $parent_id = 0;
-                break;
-            case 'tmt_mobile':
-                $parent_id = 0;
-                break;
-            case 'new_iphone':
-                $parent_id = 0;
-                break;
-            case 'new_iphone_twenty_four':
-                $parent_id = 0;
-                break;
-            case 'kettle_mobile':
-                $parent_id = 0;
-                break;
-            case 'computer_mobile':
-                $parent_id = 0;
-                break;
-            case 'appliances_mobile':
-                $parent_id = 0;
-                break;
-            case 'new_3c_mobile':
-                $parent_id = 0;
-                break;
-            default:
-                throw new CommonException(['msg' => '无此入口']);
-        }*/
         try {
             $parent_id = config('my_config.parentId_by_intoType')[$into_type];
         } catch (Exception $e) {

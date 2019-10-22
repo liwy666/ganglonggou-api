@@ -220,6 +220,5 @@ class Address
         $SerAddress->areaCode = $area_code;
 
         return $SerAddress->userUpdAddress();
-
     }
 }

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: administrator_liwy
- * Date: 2019/7/1
- * Time: 11:17
+ * Date: 2019/10/8
+ * Time: 9:36
  */
 
 namespace app\api\service\Login;
@@ -12,7 +12,7 @@ namespace app\api\service\Login;
 use app\api\model\GlUser;
 use app\lib\exception\CommonException;
 
-class MobileLogin extends BaseLogin
+class AndroidLogin extends BaseLogin
 {
     private $intoType;
     private $sonIntoType;
@@ -20,7 +20,7 @@ class MobileLogin extends BaseLogin
     public function __construct()
     {
         $this->intoType = 'wx';
-        $this->sonIntoType = 'mobile';
+        $this->sonIntoType = 'android';
     }
 
     /**
@@ -30,7 +30,7 @@ class MobileLogin extends BaseLogin
      * @throws \app\lib\exception\CommonException
      * 用户注册
      */
-    public function mobileRegister($phone, $password)
+    public function register($phone, $password)
     {
         $data = [
             'user_name' => 'mobile' . time(),
@@ -49,7 +49,7 @@ class MobileLogin extends BaseLogin
         $result['user_id'] = $user_id;
         $result['into_type'] = $this->intoType;
         $result['son_into_type'] = $this->sonIntoType;
-        $token = self::saveToCache($result);
+        $token = self::saveToCache7Day($result);
 
         return $token;
     }
@@ -66,17 +66,17 @@ class MobileLogin extends BaseLogin
      * @throws \think\exception\PDOException
      * 用户登录
      */
-    public function mobilLogin($phone, $password)
+    public function login($phone, $password)
     {
         $user_info = GlUser::where([
             ['phone', '=', $phone],
             ['is_del', '=', 0]
         ])->find();
         if (!$user_info) {
-            throw new CommonException(['msg' => '无此用户']);
+            throw new CommonException(['msg' => '无此用户','error_code'=>10001]);
         }
         if ($user_info['user_password'] !== $password) {
-            throw new CommonException(['msg' => '密码错误']);
+            throw new CommonException(['msg' => '密码错误','error_code'=>10003]);
         }
 
         self::recordUserLogin($user_info['user_id']);

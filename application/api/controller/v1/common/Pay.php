@@ -45,7 +45,7 @@ class Pay
             ->select();
 
         if (count($result) === 0) {
-            throw new CommonException(['msg' => '无有效支付方式']);
+            throw new CommonException(['msg' => '无有效支付方式','error_code'=>'20001']);
         }
 
         foreach ($result as $k => $v) {
