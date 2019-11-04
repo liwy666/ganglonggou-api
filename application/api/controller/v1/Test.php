@@ -36,6 +36,9 @@ class Test extends Controller
 {
     public function test()
     {
+        //发送邮件
+        (new SerEmail())->sendEmail('邮件测试', "邮件测试", ['987303897@qq.com']);
+
         return true;
     }
 

@@ -55,7 +55,7 @@ class AndroidLogin extends BaseLogin
     }
 
     /**
-     * @param $phone
+     * @param $email_address
      * @param $password
      * @return string
      * @throws CommonException
@@ -66,10 +66,10 @@ class AndroidLogin extends BaseLogin
      * @throws \think\exception\PDOException
      * 用户登录
      */
-    public function login($phone, $password)
+    public function login($email_address, $password)
     {
         $user_info = GlUser::where([
-            ['phone', '=', $phone],
+            ['email', '=', $email_address],
             ['is_del', '=', 0]
         ])->find();
         if (!$user_info) {

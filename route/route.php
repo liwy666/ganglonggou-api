@@ -234,6 +234,10 @@ Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
 Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
 Route::post('api/:version/android_user_login$', 'api/:version.common.Login/androidLogin');
+//发送登录或重置密码的邮箱验证码
+Route::post('api/:version/send_retrieve_password_or_login_email_verify_code$', 'api/:version.common.User/sendRetrievePasswordOrLoginEmailVerifyCode');
+//通过邮箱验证码重置密码
+Route::post('api/:version/retrieve_password_by_email_verify_code$', 'api/:version.common.User/retrievePasswordByEmailVerifyCode');
 //pc端获取请求code
 Route::get('api/:version/user_get_pc_login_code$', 'api/:version.common.Login/pcGetLoginCode');
 //pc端通过wxOpenid登录
@@ -244,7 +248,10 @@ Route::post('api/:version/wx_write_pc_token$', 'api/:version.common.Login/writeP
 Route::post('api/:version/mobile_register_check$', 'api/:version.common.Register/checkMobileRegister');
 //手机端注册
 Route::post('api/:version/mobile_register$', 'api/:version.common.Register/mobileRegister');
-
+//通过邮箱号注册
+Route::post('api/:version/register_by_email$', 'api/:version.common.Register/registerAccountsByEmailAddress');
+//注册邮箱发送验证码
+Route::post('api/:version/send_register_email_verify_code$', 'api/:version.common.Register/sendRegisterEmailVerifyCode');
 
 
 /*阅读打卡*/

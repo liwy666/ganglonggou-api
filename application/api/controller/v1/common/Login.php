@@ -228,10 +228,10 @@ class Login
     public function androidLogin()
     {
         //验证必要
-        (new CurrencyValidate())->myGoCheck(['phone', 'password'], 'require');
-        $phone = request()->param('phone');
+        (new CurrencyValidate())->myGoCheck(['email_address', 'password'], 'require');
+        $email_address = request()->param('email_address');
         $password = request()->param('password');
 
-        return (new AndroidLogin())->login($phone, $password);
+        return (new AndroidLogin())->login($email_address, $password);
     }
 }

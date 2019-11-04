@@ -19,7 +19,7 @@ return [
     //图片服务器Url
     'img_url' => $json_array['img_url'],
     //download目录
-    'public_file'=>dirname(\think\facade\Env::get('root_path')).'/main/public/download/',
+    'public_file' => dirname(\think\facade\Env::get('root_path')) . '/main/public/download/',
     //apiUrl
     'api_url' => $json_array['api_url'],
     //日志文件
@@ -65,7 +65,7 @@ return [
     ),
     'logistics_code_name' => array(
         'shunfeng' => '顺丰速递',
-        'youzhenxiaobao' => '顺丰速递',
+        'youzhenxiaobao' => '邮政小包',
     ),
     /*sql查询默认缓存时间，24小时s*/
     'sql_sel_cache_time' => 86400,
@@ -88,6 +88,12 @@ return [
         'kettle_mobile' => 0,
         'computer_mobile' => 0,
         'appliances_mobile' => 0,
-        'new_3c_mobile' => 0
-    )
+        'new_3c_mobile' => 0,
+        'double_eleven' => 0,
+    ),
+    /*邮件服务器配置*/
+    'email_address' => $json_array['email_server']['email_address'],
+    'email_password' => $json_array['email_server']['password'],
+    'email_host' => $json_array['email_server']['host'],
+    'email_port' => $json_array['email_server']['port'],
 ];

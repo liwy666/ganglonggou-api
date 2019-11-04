@@ -80,6 +80,7 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         $data['origin_goods_price'] = request()->param('origin_goods_price');
         $data['url'] = request()->param('url');
+        $data['pc_url'] = request()->param('pc_url');
         $data['click_count'] = 0;
         $data['is_on_sale'] = 1;
 
@@ -141,6 +142,7 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         $data['origin_goods_price'] = request()->param('origin_goods_price');
         $data['url'] = request()->param('url');
+        $data['pc_url'] = request()->param('pc_url');
 
 
         if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
@@ -245,6 +247,9 @@ class CmsIndexAd
         }
         if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
             $data['is_fixed'] = request()->param('is_fixed');
+        }
+        if (request()->param('pc_url')) {
+            $data['pc_url'] = request()->param('pc_url');
         }
         $data['url'] = request()->param('url');
 
@@ -369,18 +374,19 @@ class CmsIndexAd
                 }
 
             }
+            /*生成js文件*/
+            $data_js_name = config('my_config.public_file') . "temp/data" . time() . rand(100, 999) . ".js";
+            $data_js = fopen($data_js_name, "w");
+            fwrite($data_js, "gl_data = '" . json_encode($index_ad_date, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "';");
+            fclose($data_js);
+            $zip->addFile($data_js_name, 'js/gl_data.js');
+            $zip->close();
+            //删除临时js
+            if (file_exists($data_js_name)) {
+                unlink($data_js_name);
+            }
         }
-        /*生成js文件*/
-        $data_js_name = config('my_config.public_file') . "temp/data" . time() . rand(100, 999) . ".js";
-        $data_js = fopen($data_js_name, "w");
-        fwrite($data_js, "gl_data = '" . json_encode($index_ad_date, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "';");
-        fclose($data_js);
-        $zip->addFile($data_js_name, 'js/gl_data.js');
-        $zip->close();
-        //删除临时js
-        if (file_exists($data_js_name)) {
-            unlink($data_js_name);
-        }
+
 
         return config('my_config.api_url') . '/download/' . $zip_name;
     }
