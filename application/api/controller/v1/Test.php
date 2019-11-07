@@ -9,6 +9,7 @@
 namespace app\api\controller\v1;
 
 
+use app\api\controller\v1\common\Index;
 use app\api\model\GlAfterSale;
 use app\api\model\GlArticleSignUser;
 use app\api\model\GlCategory;
@@ -19,6 +20,7 @@ use app\api\model\GlIntoCount;
 use app\api\model\GlOrder;
 use app\api\model\Test1;
 use app\api\model\Test2;
+use app\api\service\DownloadImage;
 use app\api\service\Login\BaseLogin;
 use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
@@ -36,10 +38,18 @@ class Test extends Controller
 {
     public function test()
     {
-        //发送邮件
-        (new SerEmail())->sendEmail('邮件测试', "邮件测试", ['987303897@qq.com']);
+        $data = GlIndexAd::where(['into_type' => 'double_eleven', 'is_on_sale' => 1])
+            ->order(['position_type', 'sort_order' => 'desc'])
+            ->select()->toArray();
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i] = $this->byKeyrRemoveArrVal($data[$i], 'id');
+            $data[$i]['into_type'] = 'double_eleven_burst';
+            $data[$i]['click_count'] = 0;
+            $data[$i]['ad_img'] = removeImgUrl($data[$i]['ad_img']);
+        }
+        GlIndexAd::insertAll($data);
+        return $data;
 
-        return true;
     }
 
 

@@ -190,7 +190,7 @@ class User
             throw new CommonException(['msg' => '验证码错误']);
         }
         //验证邮箱是否存在
-        $user_info = GlUser::where([['email', '=', $email_address]])->find()->toArray();
+        $user_info = GlUser::where([['email', '=', $email_address]])->find();
         if (!$user_info) {
             throw new CommonException(['msg' => '用户不存在']);
         }

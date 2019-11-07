@@ -68,7 +68,7 @@ class WxLogin extends BaseLogin
                 Log::write($getInfo, 'error');
                 throw new CommonException(['msg' => '获取用户信息失败', 'code' => '400', 'error_code' => 10002]);
             }
-            Log::write($getInfo, 'error');
+            //Log::write($getInfo, 'error');
             $this->wxOpenid = $getInfo['openid'];
             //永久缓存openid
             Cache::set($this->code . '_user_wx_openid', $getInfo['openid'], 0);

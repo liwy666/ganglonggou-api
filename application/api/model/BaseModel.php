@@ -16,7 +16,7 @@ class BaseModel extends Model
     //直接拼接图片
     protected function spellOriginalImg($value, $data)
     {
-        if (!$value) {
+        if (!$value||strpos($value,'http')) {
             return $value;
         }
         return config('my_config.img_url') . $value;
@@ -25,7 +25,7 @@ class BaseModel extends Model
     //img标签拼接图片
     protected function imgTagSpellOriginalImg($value, $data)
     {
-        if (!$value) {
+        if (!$value||strpos($value,'http')) {
             return $value;
         }
         $img_src = 'src="' . config('my_config.img_url');

@@ -34,10 +34,12 @@ return [
     'token_expire_in_7day' => 604800000,
     //wx各种缓存到期时间s
     'wx_expire_in' => 6000,
-    //wxAppId
+    //针对公众号的微信的appId和WxSecret
     'wx_app_id' => $json_array['wx_app_id'],
-    //WxSecret
     'wx_secret' => $json_array['wx_secret'],
+    //针对app的微信的appId和WxSecret
+    'app_wx_app_id' => $json_array['app_wx_app_id'],
+    'app_wx_secret' => $json_array['app_wx_secret'],
     //订单支付超时时间s
     'invalid_pay_time' => 43200,
     //签收超时时间s
@@ -90,6 +92,7 @@ return [
         'appliances_mobile' => 0,
         'new_3c_mobile' => 0,
         'double_eleven' => 0,
+        'double_eleven_burst' => 0,
     ),
     /*邮件服务器配置*/
     'email_address' => $json_array['email_server']['email_address'],

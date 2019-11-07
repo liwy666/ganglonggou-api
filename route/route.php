@@ -234,6 +234,7 @@ Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
 Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
 Route::post('api/:version/android_user_login$', 'api/:version.common.Login/androidLogin');
+Route::post('api/:version/android_wx_login$', 'api/:version.common.Login/androidWeChatLogin');
 //发送登录或重置密码的邮箱验证码
 Route::post('api/:version/send_retrieve_password_or_login_email_verify_code$', 'api/:version.common.User/sendRetrievePasswordOrLoginEmailVerifyCode');
 //通过邮箱验证码重置密码

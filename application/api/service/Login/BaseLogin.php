@@ -10,7 +10,10 @@ namespace app\api\service\Login;
 
 
 use app\api\model\GlUser;
+use app\api\service\DownloadImage;
 use app\lib\exception\CommonException;
+use think\facade\Cache;
+use think\facade\Log;
 
 class BaseLogin
 {
@@ -149,5 +152,80 @@ class BaseLogin
             ->setInc('login_count');
 
         return true;
+    }
+
+
+    /**
+     * @param $code
+     * @return mixed
+     * @throws CommonException
+     * APP获取微信用户信息
+     */
+    public static function getWeChatUserInfoForApp($code)
+    {
+        $app_id = config('my_config.app_wx_app_id');
+        $secret = config('my_config.app_wx_secret');
+        $openid_cache_name = $code . '_app_wx_openid';
+        $grant_type = 'authorization_code';
+        $debug = config('my_config.debug');
+
+        $openid = Cache::get($openid_cache_name);
+        if (!$openid || $debug) {
+            $get_access_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=$app_id&secret=$secret&code=$code&grant_type=$grant_type";
+            $curl = curl_init(); // 启动一个CURL会话
+            curl_setopt($curl, CURLOPT_URL, $get_access_url);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+            $tmpInfo = curl_exec($curl);     //返回api的json对象		    //关闭URL请求
+            curl_close($curl);
+            $access_info = json_decode($tmpInfo, true);
+            if (!is_array($access_info) || !array_key_exists('openid', $access_info)) {
+                Log::write($access_info, 'error');
+                throw new CommonException(['msg' => 'app获取微信access信息失败', 'code' => '500']);
+            }
+            $openid = $access_info['openid'];
+            $access_token = $access_info['access_token'];
+            //通过code永久缓存openid
+            Cache::set($openid_cache_name, $access_info['openid'], 0);
+
+            $user_info_cache_name = $openid . '_app_wx_user_info';
+            $wx_user_info = Cache::get($user_info_cache_name);
+            if (!$wx_user_info || $debug) {
+                $get_user_info_url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$openid&lang=zh_CN";
+                $curl = curl_init(); // 启动一个CURL会话
+                curl_setopt($curl, CURLOPT_URL, $get_user_info_url);
+                curl_setopt($curl, CURLOPT_HEADER, 0);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+                $tmpInfo = curl_exec($curl);     //返回api的json对象		    //关闭URL请求
+                curl_close($curl);
+                $wx_user_info = json_decode($tmpInfo, true);
+                if (!is_array($wx_user_info) || !array_key_exists('openid', $wx_user_info)) {
+                    Log::write($wx_user_info, 'error');
+                    throw new CommonException(['msg' => 'app获取微信用户信息失败', 'code' => '500']);
+                }
+                if ($wx_user_info['headimgurl']) {
+                    //替换头像地址为大图
+                    $reg = '/\/\d+$/';
+                    $wx_user_info['headimgurl'] = preg_replace($reg, '/0', $wx_user_info['headimgurl']);
+                    //下载图片到本地
+                    $wx_user_info['head_img_file'] = (new DownloadImage())->download($wx_user_info['headimgurl']);
+                } else {
+                    $wx_user_info['head_img_file'] = 'head_portrait.png';
+                }
+
+
+                //通过openid永久缓存用户信息
+                Cache::set($user_info_cache_name, $wx_user_info, 0);
+            }
+        } else {
+            $user_info_cache_name = $openid . '_app_wx_user_info';
+            $wx_user_info = Cache::get($user_info_cache_name);
+        }
+
+        return $wx_user_info;
     }
 }
