@@ -24,6 +24,8 @@ Route::get('api/:version/goods_make/get_WxJsSdk', 'api/:version.WxShare/giveWxSh
 /*支付回调*/
 //微信公众号支付回调
 Route::any('api/:version/notify/wx_js_api_notify$', 'api/:version.notify.PayNotify/wxJsApiNotify');
+//微信App支付回调
+Route::any('api/:version/notify/wx_app_api_notify$', 'api/:version.notify.PayNotify/wxAppApiNotify');
 //农行支付回调
 Route::any('api/:version/notify/abc_notify$', 'api/:version.notify.PayNotify/abcPayNotify');
 //中行支付回调
@@ -143,6 +145,12 @@ Route::post('api/:version/cms/cms_add_article$', 'api/:version.cms.CmsArticle/ad
 Route::post('api/:version/cms/cms_upd_article$', 'api/:version.cms.CmsArticle/updArticle');
 Route::post('api/:version/cms/cms_del_article$', 'api/:version.cms.CmsArticle/delArticle');
 Route::get('api/:version/cms/cms_get_all_article$', 'api/:version.cms.CmsArticle/giveAllArticle');
+/*搜索历史*/
+Route::get('api/:version/cms/cms_get_all_search_log$', 'api/:version.cms.CmsSearchLog/giveSearchLogListByPage');
+Route::post('api/:version/cms/cms_add_search_log$', 'api/:version.cms.CmsSearchLog/addSearchLog');
+Route::post('api/:version/cms/cms_del_search_log$', 'api/:version.cms.CmsSearchLog/delSearchLog');
+Route::post('api/:version/cms/cms_verify_search_log$', 'api/:version.cms.CmsSearchLog/verifySearchLog');
+Route::post('api/:version/cms/cms_cancel_verify_search_log$', 'api/:version.cms.CmsSearchLog/cancelVerifySearchLog');
 
 
 /*goods_make*/
@@ -224,6 +232,9 @@ Route::post('api/:version/user_call_after_sale$', 'api/:version.common.AfterSale
 Route::get('api/:version/user_get_classify_ad_list$', 'api/:version.common.ClassifyAd/giveClassifyAdList');
 //获取文章
 Route::get('api/:version/user_get_article$', 'api/:version.common.Article/giveArticle');
+//获取搜索关键词
+Route::get('api/:version/user_get_search_log$', 'api/:version.common.SearchLog/getSearchLog');
+Route::post('api/:version/user_add_search_log$', 'api/:version.common.SearchLog/addSearchLog');
 
 
 /*登录*/

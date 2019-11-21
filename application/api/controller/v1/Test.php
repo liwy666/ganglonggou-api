@@ -18,6 +18,7 @@ use app\api\model\GlGoodsSku;
 use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
 use app\api\model\GlOrder;
+use app\api\model\GlSearchLog;
 use app\api\model\Test1;
 use app\api\model\Test2;
 use app\api\service\DownloadImage;
@@ -38,17 +39,9 @@ class Test extends Controller
 {
     public function test()
     {
-        $data = GlIndexAd::where(['into_type' => 'double_eleven', 'is_on_sale' => 1])
-            ->order(['position_type', 'sort_order' => 'desc'])
-            ->select()->toArray();
-        for ($i = 0; $i < count($data); $i++) {
-            $data[$i] = $this->byKeyrRemoveArrVal($data[$i], 'id');
-            $data[$i]['into_type'] = 'double_eleven_burst';
-            $data[$i]['click_count'] = 0;
-            $data[$i]['ad_img'] = removeImgUrl($data[$i]['ad_img']);
-        }
-        GlIndexAd::insertAll($data);
-        return $data;
+        $result =  GlSearchLog::where('id', 8)
+            ->setInc('search_count');
+        return $result;
 
     }
 

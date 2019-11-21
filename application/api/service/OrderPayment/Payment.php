@@ -150,6 +150,9 @@ class Payment
             case 'WxJsApiPayment':
                 $PayClass = new WxJsApiPayment();
                 break;
+            case 'WxAppApiPayment':
+                $PayClass = new WxAppApiPayment();
+                break;
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
                 break;
