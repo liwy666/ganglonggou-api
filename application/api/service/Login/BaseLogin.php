@@ -10,6 +10,7 @@ namespace app\api\service\Login;
 
 
 use app\api\model\GlUser;
+use app\api\service\AliPay\AliPay;
 use app\api\service\DownloadImage;
 use app\lib\exception\CommonException;
 use think\facade\Cache;
@@ -207,7 +208,7 @@ class BaseLogin
                     Log::write($wx_user_info, 'error');
                     throw new CommonException(['msg' => 'app获取微信用户信息失败', 'code' => '500']);
                 }
-                if ($wx_user_info['headimgurl']) {
+                if (array_key_exists('headimgurl', $wx_user_info) && $wx_user_info['headimgurl']) {
                     //替换头像地址为大图
                     $reg = '/\/\d+$/';
                     $wx_user_info['headimgurl'] = preg_replace($reg, '/0', $wx_user_info['headimgurl']);
@@ -216,8 +217,6 @@ class BaseLogin
                 } else {
                     $wx_user_info['head_img_file'] = 'head_portrait.png';
                 }
-
-
                 //通过openid永久缓存用户信息
                 Cache::set($user_info_cache_name, $wx_user_info, 0);
             }
@@ -227,5 +226,53 @@ class BaseLogin
         }
 
         return $wx_user_info;
+    }
+
+    /**
+     * @param $code
+     * @return array|mixed
+     * @throws CommonException
+     * APP获取支付宝用户信息
+     */
+    public static function getAliPayUserInfoForApp($code)
+    {
+        $ali_pay_user_id_cache_name = $code . '_app_ali_pay_user_id';
+        $debug = config('my_config.debug');
+        $AliPay = new AliPay();
+        $ali_pay_user_id = Cache::get($ali_pay_user_id_cache_name);
+        if ($ali_pay_user_id || $debug) {
+            $oauth_token_result = $AliPay->oauthToken($code);
+            if (!is_array($oauth_token_result) || array_key_exists('error_response', $oauth_token_result)) {
+                Log::write($oauth_token_result, 'error');
+                throw new CommonException(['msg' => 'app获取支付宝access_token信息失败', 'code' => '500']);
+            }
+            //通过code永久缓存user_id
+            Cache::set($ali_pay_user_id_cache_name, $oauth_token_result['alipay_system_oauth_token_response']['user_id'], 0);
+
+            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
+            $user_info = Cache::get($user_info_cache_name);
+            if (!$user_info || $debug) {
+                $user_info_share = $AliPay->userInfoShare($oauth_token_result['alipay_system_oauth_token_response']['access_token']);
+                if (!is_array($user_info_share) || $user_info_share['alipay_user_info_share_response']['code'] !== '10000') {
+                    Log::write($user_info_share, 'error');
+                    throw new CommonException(['msg' => 'app获取支付宝用户信息失败', 'code' => '500']);
+                }
+                //下载图片到本地
+                $user_info['head_img_file'] = (new DownloadImage())->download($user_info_share['alipay_user_info_share_response']['avatar']);
+                //生成用户姓名
+                $user_info['nick_name'] = array_key_exists('nick_name', $user_info_share['alipay_user_info_share_response']) ? $user_info_share['alipay_user_info_share_response']['nick_name'] : 'aliPay' . time();
+                //user_id
+                $user_info['ali_pay_user_id'] = $user_info_share['alipay_user_info_share_response']['user_id'];
+                //通过openid永久缓存用户信息
+                Cache::set($user_info_cache_name, $user_info, 0);
+            }
+
+        } else {
+            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
+            $user_info = Cache::get($user_info_cache_name);
+        }
+
+
+        return $user_info;
     }
 }

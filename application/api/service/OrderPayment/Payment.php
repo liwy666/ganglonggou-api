@@ -156,6 +156,9 @@ class Payment
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
                 break;
+            case 'AppAliPayment':
+                $PayClass = new AppAliPayment();
+                break;
             default:
                 throw new CommonException(['无效支付方式,该支付方式或已关闭']);
         }

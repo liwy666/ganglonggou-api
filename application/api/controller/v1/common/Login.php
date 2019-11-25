@@ -13,7 +13,8 @@ use app\api\model\GlUser;
 use app\api\service\Login\AbcAppLogin;
 use app\api\service\Login\AbcWxLogin;
 use app\api\service\Login\AndroidLogin;
-use app\api\service\Login\AndroidWxLogin;
+use app\api\service\Login\AppAliPayLogin;
+use app\api\service\Login\AppWeChatLogin;
 use app\api\service\Login\BaseLogin;
 use app\api\service\Login\MobileLogin;
 use app\api\service\Login\PcLogin;
@@ -246,10 +247,29 @@ class Login
      * @throws \think\exception\PDOException
      * 安卓用户微信登录
      */
-    public function androidWeChatLogin(){
+    public function androidWeChatLogin()
+    {
         (new CurrencyValidate())->myGoCheck(['code'], 'require');
         $code = request()->param('code');
 
-        return (new AndroidWxLogin($code))->getToken();
+        return (new AppWeChatLogin($code, 'android'))->getToken();
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 安卓用户支付宝登录
+     */
+    public function androidAliPayLogin()
+    {
+        (new CurrencyValidate())->myGoCheck(['code'], 'require');
+        $code = request()->param('code');
+
+        return (new AppAliPayLogin($code, 'android'))->getToken();
     }
 }

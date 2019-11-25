@@ -14,7 +14,7 @@ use app\lib\exception\CommonException;
 use think\facade\Cache;
 use think\facade\Log;
 
-class AndroidWxLogin extends BaseLogin
+class AppWeChatLogin extends BaseLogin
 {
     private $intoType;
     private $sonIntoType;
@@ -22,13 +22,14 @@ class AndroidWxLogin extends BaseLogin
 
 
     /**
-     * WxLogin constructor.
+     * AppWeChatLogin constructor.
      * @param $code
+     * @param $son_into_type
      */
-    public function __construct($code)
+    public function __construct($code, $son_into_type)
     {
         $this->intoType = 'wx';
-        $this->sonIntoType = 'android';
+        $this->sonIntoType = $son_into_type;
         $this->code = $code;
     }
 

@@ -99,4 +99,7 @@ return [
     'email_password' => $json_array['email_server']['password'],
     'email_host' => $json_array['email_server']['host'],
     'email_port' => $json_array['email_server']['port'],
+    /*des*/
+    'des_key'=>'P36lrz6fLmHqb3kx',
+    'des_vi'=>'65412398'
 ];

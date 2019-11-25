@@ -10,7 +10,8 @@
         "hassankhan/config": "dev-master",
         "naixiaoxin/think-wechat": "dev-master",
       "ext-curl": "*",
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {

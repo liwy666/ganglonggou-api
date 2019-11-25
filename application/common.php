@@ -247,3 +247,15 @@ function byValIsNullRemoveArrVal($arr)
     }
 }
 
+function objectToArray($object)
+{
+    $array = [];
+
+    if ($object) {
+        foreach ($object as $k => $v) {
+            $array[$k] = $v;
+        }
+    }
+    return $array;
+}
+
