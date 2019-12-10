@@ -68,6 +68,8 @@ return [
     'logistics_code_name' => array(
         'shunfeng' => '顺丰速递',
         'youzhenxiaobao' => '邮政小包',
+        'bestex,' => '百世快递',
+        'ems' => '邮政',
     ),
     /*sql查询默认缓存时间，24小时s*/
     'sql_sel_cache_time' => 86400,
@@ -100,6 +102,6 @@ return [
     'email_host' => $json_array['email_server']['host'],
     'email_port' => $json_array['email_server']['port'],
     /*des*/
-    'des_key'=>'P36lrz6fLmHqb3kx',
-    'des_vi'=>'65412398'
+    'des_key' => 'P36lrz6fLmHqb3kx',
+    'des_vi' => '65412398'
 ];

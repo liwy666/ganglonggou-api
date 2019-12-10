@@ -11,7 +11,7 @@ namespace app\api\model;
 
 class GlMidOrder extends BaseModel
 {
-    static private $ScreenMidOrder_true = 'id,order_sn,sku_id';
+    static private $ScreenMidOrder_true = 'order_sn,sku_id';
 
     public function getImgUrlAttr($value, $data)
     {

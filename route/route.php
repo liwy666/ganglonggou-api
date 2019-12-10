@@ -151,7 +151,11 @@ Route::post('api/:version/cms/cms_add_search_log$', 'api/:version.cms.CmsSearchL
 Route::post('api/:version/cms/cms_del_search_log$', 'api/:version.cms.CmsSearchLog/delSearchLog');
 Route::post('api/:version/cms/cms_verify_search_log$', 'api/:version.cms.CmsSearchLog/verifySearchLog');
 Route::post('api/:version/cms/cms_cancel_verify_search_log$', 'api/:version.cms.CmsSearchLog/cancelVerifySearchLog');
-
+/*APP更新*/
+Route::post('api/:version/cms/cms_upload_app$', 'api/:version.AppVersion/uploadApp');
+Route::rule('api/:version/cms/cms_upload_app$', 'api/:version.Option/returnTrue', 'OPTIONS');
+Route::post('api/:version/cms/cms_add_new_version_app$', 'api/:version.AppVersion/addNewVersionApp');
+Route::get('api/:version/cms/cms_get_app_version_info$', 'api/:version.AppVersion/getAppVersion');
 
 /*goods_make*/
 //获取首页信息

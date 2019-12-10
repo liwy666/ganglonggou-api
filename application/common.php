@@ -216,15 +216,16 @@ function byKeyRemoveArrVal($arr, $key)
 
 /**
  * @param $file
+ * @param $before_url
  * @return mixed
- *去除图片中的url
+ * 去除图片中的url
  */
-function removeImgUrl($file)
+function removeImgUrl($file, $before_url = "")
 {
+    if (!$before_url) $before_url = config('my_config.img_url');
+    if (strpos($file, $before_url) >= 0) {
 
-    if (strpos($file, config('my_config.img_url')) >= 0) {
-
-        return str_replace(config('my_config.img_url'), '', $file);
+        return str_replace($before_url, '', $file);
 
     } else {
         return $file;
