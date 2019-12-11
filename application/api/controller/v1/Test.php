@@ -9,35 +9,120 @@
 namespace app\api\controller\v1;
 
 
+use app\api\controller\v1\common\Index;
+use app\api\model\GlAfterSale;
+use app\api\model\GlArticleSignUser;
 use app\api\model\GlCategory;
 use app\api\model\GlGoods;
 use app\api\model\GlGoodsSku;
 use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
+use app\api\model\GlOrder;
+use app\api\model\GlSearchLog;
 use app\api\model\Test1;
 use app\api\model\Test2;
+use app\api\service\AliPay;
+use app\api\service\DES;
+use app\api\service\DownloadImage;
+use app\api\service\Login\BaseLogin;
+use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
+use app\api\service\SerAfterSale;
 use app\api\service\SerEmail;
+use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
 use EasyWeChat\Factory;
 use Naixiaoxin\ThinkWechat\Facade;
 use Noodlehaus\Config;
 use think\Controller;
 use think\Db;
-use think\facade\Log;
 
 class Test extends Controller
 {
     public function test()
     {
-
-//        $test = new Array();
-//        //$test['sd'] = 111;
-//        return $test;
-
+       $str = 'success=true&result_code=200&app_id=2017110609764829&auth_code=2c65b24b77554c1482f0f98ab017YX40&scope=kuaijie&alipay_open_id=20880050551716885137578560816740&user_id=2088702746395409&target_id=1574405082';
+        $arr = explode('&', $str);//转成数组
+        $res = array();
+        foreach ($arr as $k => $v) {
+            $arr = explode('=', $v);
+            $res[$arr[0]] = $arr[1];
+        }
+        return $res;
     }
 
 
+    private function getAliPayUserInfo()
+    {
+        $AliPay = new AliPay();
+
+        $oauth_token_result = $AliPay->oauthToken('2c65b24b77554c1482f0f98ab017YX40');
+
+        return $AliPay->userInfoShare($oauth_token_result['alipay_system_oauth_token_response']['access_token']);
+    }
+
+    /**
+     * des加密
+     */
+    private function des()
+    {
+        $key = 'u1BvOHzUOcklgNpn1MaWvdn9DT4LyzSX';
+        $iv = '12345678';
+        // DES CBC 加解密
+        $des = new DES($key, 'DES-CBC', DES::OUTPUT_BASE64, $iv);
+        $base64Sign = $des->encrypt('Hello DES CBC');
+        $des->decrypt($base64Sign);
+        // DES ECB 加解密
+        $des = new DES($key, 'DES-ECB', DES::OUTPUT_HEX);
+        $base64Sign = $des->encrypt('Hello DES ECB');
+        $des->decrypt($base64Sign);
+    }
+
+    /**
+     * @return bool
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     *创建zip
+     */
+    private function createZip()
+    {
+        /*获取数据*/
+        $index_ad_date = GlIndexAd::giveIndexAdListByIntoType('tmt_mobile')->toArray();
+        /*将图片添加到zip*/
+        $zip = new \ZipArchive();
+        if ($zip->open(config('my_config.public_file') . time() . rand(100, 999) . '.zip', \ZipArchive::CREATE) !== TRUE) {
+            throw new CommonException(['msg' => '无效zip路径']);
+        }
+        if (is_array($index_ad_date)) {
+            foreach ($index_ad_date as $key => $value) {
+                $img_name = str_replace(config('my_config.img_url'), '', $value['ad_img']);
+                $img_file = config('my_config.img_file') . $img_name;
+                if (file_exists($img_file)) {
+                    $zip->addFile($img_file, 'images/' . $img_name);
+                    $index_ad_date[$key]['ad_img'] = './images/' . $img_name;
+                }
+
+            }
+        }
+        /*生成js文件*/
+        $data_js_name = config('my_config.public_file') . "temp/data" . time() . rand(100, 999) . ".js";
+        $data_js = fopen($data_js_name, "w");
+        fwrite($data_js, "var data = '" . json_encode($index_ad_date, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "';");
+        fclose($data_js);
+        $zip->addFile($data_js_name, 'js/data.js');
+        $zip->close();
+        //删除临时js
+        if (file_exists($data_js_name)) {
+            unlink($data_js_name);
+        }
+        return true;
+    }
+
+    /**
+     * @return string
+     */
     private function sendEmailTest()
     {
 

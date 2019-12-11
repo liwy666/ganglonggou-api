@@ -10,7 +10,11 @@ namespace app\api\service\Login;
 
 
 use app\api\model\GlUser;
+use app\api\service\AliPay\AliPay;
+use app\api\service\DownloadImage;
 use app\lib\exception\CommonException;
+use think\facade\Cache;
+use think\facade\Log;
 
 class BaseLogin
 {
@@ -149,5 +153,126 @@ class BaseLogin
             ->setInc('login_count');
 
         return true;
+    }
+
+
+    /**
+     * @param $code
+     * @return mixed
+     * @throws CommonException
+     * APP获取微信用户信息
+     */
+    public static function getWeChatUserInfoForApp($code)
+    {
+        $app_id = config('my_config.app_wx_app_id');
+        $secret = config('my_config.app_wx_secret');
+        $openid_cache_name = $code . '_app_wx_openid';
+        $grant_type = 'authorization_code';
+        $debug = config('my_config.debug');
+
+        $openid = Cache::get($openid_cache_name);
+        if (!$openid || $debug) {
+            $get_access_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=$app_id&secret=$secret&code=$code&grant_type=$grant_type";
+            $curl = curl_init(); // 启动一个CURL会话
+            curl_setopt($curl, CURLOPT_URL, $get_access_url);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+            $tmpInfo = curl_exec($curl);     //返回api的json对象		    //关闭URL请求
+            curl_close($curl);
+            $access_info = json_decode($tmpInfo, true);
+            if (!is_array($access_info) || !array_key_exists('openid', $access_info)) {
+                Log::write($access_info, 'error');
+                throw new CommonException(['msg' => 'app获取微信access信息失败', 'code' => '500']);
+            }
+            $openid = $access_info['openid'];
+            $access_token = $access_info['access_token'];
+            //通过code永久缓存openid
+            Cache::set($openid_cache_name, $access_info['openid'], 0);
+
+            $user_info_cache_name = $openid . '_app_wx_user_info';
+            $wx_user_info = Cache::get($user_info_cache_name);
+            if (!$wx_user_info || $debug) {
+                $get_user_info_url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$openid&lang=zh_CN";
+                $curl = curl_init(); // 启动一个CURL会话
+                curl_setopt($curl, CURLOPT_URL, $get_user_info_url);
+                curl_setopt($curl, CURLOPT_HEADER, 0);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+                $tmpInfo = curl_exec($curl);     //返回api的json对象		    //关闭URL请求
+                curl_close($curl);
+                $wx_user_info = json_decode($tmpInfo, true);
+                if (!is_array($wx_user_info) || !array_key_exists('openid', $wx_user_info)) {
+                    Log::write($wx_user_info, 'error');
+                    throw new CommonException(['msg' => 'app获取微信用户信息失败', 'code' => '500']);
+                }
+                if (array_key_exists('headimgurl', $wx_user_info) && $wx_user_info['headimgurl']) {
+                    //替换头像地址为大图
+                    $reg = '/\/\d+$/';
+                    $wx_user_info['headimgurl'] = preg_replace($reg, '/0', $wx_user_info['headimgurl']);
+                    //下载图片到本地
+                    $wx_user_info['head_img_file'] = (new DownloadImage())->download($wx_user_info['headimgurl']);
+                } else {
+                    $wx_user_info['head_img_file'] = 'head_portrait.png';
+                }
+                //通过openid永久缓存用户信息
+                Cache::set($user_info_cache_name, $wx_user_info, 0);
+            }
+        } else {
+            $user_info_cache_name = $openid . '_app_wx_user_info';
+            $wx_user_info = Cache::get($user_info_cache_name);
+        }
+
+        return $wx_user_info;
+    }
+
+    /**
+     * @param $code
+     * @return array|mixed
+     * @throws CommonException
+     * APP获取支付宝用户信息
+     */
+    public static function getAliPayUserInfoForApp($code)
+    {
+        $ali_pay_user_id_cache_name = $code . '_app_ali_pay_user_id';
+        $debug = config('my_config.debug');
+        $AliPay = new AliPay();
+        $ali_pay_user_id = Cache::get($ali_pay_user_id_cache_name);
+        if ($ali_pay_user_id || $debug) {
+            $oauth_token_result = $AliPay->oauthToken($code);
+            if (!is_array($oauth_token_result) || array_key_exists('error_response', $oauth_token_result)) {
+                Log::write($oauth_token_result, 'error');
+                throw new CommonException(['msg' => 'app获取支付宝access_token信息失败', 'code' => '500']);
+            }
+            //通过code永久缓存user_id
+            Cache::set($ali_pay_user_id_cache_name, $oauth_token_result['alipay_system_oauth_token_response']['user_id'], 0);
+
+            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
+            $user_info = Cache::get($user_info_cache_name);
+            if (!$user_info || $debug) {
+                $user_info_share = $AliPay->userInfoShare($oauth_token_result['alipay_system_oauth_token_response']['access_token']);
+                if (!is_array($user_info_share) || $user_info_share['alipay_user_info_share_response']['code'] !== '10000') {
+                    Log::write($user_info_share, 'error');
+                    throw new CommonException(['msg' => 'app获取支付宝用户信息失败', 'code' => '500']);
+                }
+                //下载图片到本地
+                $user_info['head_img_file'] = (new DownloadImage())->download($user_info_share['alipay_user_info_share_response']['avatar']);
+                //生成用户姓名
+                $user_info['nick_name'] = array_key_exists('nick_name', $user_info_share['alipay_user_info_share_response']) ? $user_info_share['alipay_user_info_share_response']['nick_name'] : 'aliPay' . time();
+                //user_id
+                $user_info['ali_pay_user_id'] = $user_info_share['alipay_user_info_share_response']['user_id'];
+                //通过openid永久缓存用户信息
+                Cache::set($user_info_cache_name, $user_info, 0);
+            }
+
+        } else {
+            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
+            $user_info = Cache::get($user_info_cache_name);
+        }
+
+
+        return $user_info;
     }
 }

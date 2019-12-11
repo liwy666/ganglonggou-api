@@ -19,3 +19,11 @@ sprintf("%01.2f",$price);
 \think\facade\Env::get('root_path');
 //json配置文件目录
  $json_file = dirname(\think\facade\Env::get('root_path')) . '/config/ganglonggou.json';
+
+//通过入口获取parentId
+  try {
+            $parent_id = config('my_config.parentId_by_intoType')[$into_type];
+        } catch (Exception $e) {
+            throw new CommonException(['msg' => '无此入口']);
+    };
+

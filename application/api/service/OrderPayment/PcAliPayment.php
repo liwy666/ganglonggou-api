@@ -94,7 +94,6 @@ class PcAliPayment
                 break;
         }
 
-
         $aop = new \AlipayTradeService($config);
 
         /*生成支付html*/

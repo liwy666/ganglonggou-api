@@ -80,8 +80,13 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         $data['origin_goods_price'] = request()->param('origin_goods_price');
         $data['url'] = request()->param('url');
+        $data['pc_url'] = request()->param('pc_url');
         $data['click_count'] = 0;
         $data['is_on_sale'] = 1;
+
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
+        }
 
         //第二次验证
         if ($data['ad_type'] === '商品ID') {
@@ -137,6 +142,13 @@ class CmsIndexAd
         $data['goods_price'] = request()->param('goods_price');
         $data['origin_goods_price'] = request()->param('origin_goods_price');
         $data['url'] = request()->param('url');
+        $data['pc_url'] = request()->param('pc_url');
+
+
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
+        }
+
         //第二次验证
         if ($data['ad_type'] === '商品ID') {
             (new CurrencyValidate())->myGoCheck(['goods_id'], 'require');
@@ -230,6 +242,15 @@ class CmsIndexAd
         $data['sort_order'] = request()->param('sort_order');
         $data['goods_name'] = request()->param('goods_name');
         $data['goods_price'] = request()->param('goods_price');
+        if (request()->param('origin_goods_price')) {
+            $data['origin_goods_price'] = request()->param('origin_goods_price');
+        }
+        if (request()->param('is_fixed') == 0 || request()->param('is_fixed') == 1) {
+            $data['is_fixed'] = request()->param('is_fixed');
+        }
+        if (request()->param('pc_url')) {
+            $data['pc_url'] = request()->param('pc_url');
+        }
         $data['url'] = request()->param('url');
 
         //更新
@@ -316,5 +337,57 @@ class CmsIndexAd
 
         return true;
 
+    }
+
+    /**
+     * @return string
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 获取数据压缩包
+     */
+    public function getDataZipUrl()
+    {
+
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['into_type'], 'require');
+        //UserAuthority::checkAuthority(8);
+        $into_type = request()->param('into_type');
+
+        /*获取数据*/
+        $index_ad_date = GlIndexAd::giveIndexAdListByIntoType($into_type)->toArray();
+        /*将图片添加到zip*/
+        $zip = new \ZipArchive();
+        $zip_name = time() . rand(100, 999) . '.zip';
+        $zip_file_name = config('my_config.public_file') . $zip_name;
+        if ($zip->open($zip_file_name, \ZipArchive::CREATE) !== TRUE) {
+            throw new CommonException(['msg' => '无效zip路径']);
+        }
+        if (is_array($index_ad_date)) {
+            foreach ($index_ad_date as $key => $value) {
+                $img_name = str_replace(config('my_config.img_url'), '', $value['ad_img']);
+                $img_file = config('my_config.img_file') . $img_name;
+                if (file_exists($img_file)) {
+                    $zip->addFile($img_file, 'images/' . $img_name);
+                    $index_ad_date[$key]['ad_img'] = './images/' . $img_name;
+                }
+
+            }
+            /*生成js文件*/
+            $data_js_name = config('my_config.public_file') . "temp/data" . time() . rand(100, 999) . ".js";
+            $data_js = fopen($data_js_name, "w");
+            fwrite($data_js, "gl_data = '" . json_encode($index_ad_date, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "';");
+            fclose($data_js);
+            $zip->addFile($data_js_name, 'js/gl_data.js');
+            $zip->close();
+            //删除临时js
+            if (file_exists($data_js_name)) {
+                unlink($data_js_name);
+            }
+        }
+
+
+        return config('my_config.api_url') . '/download/' . $zip_name;
     }
 }

@@ -38,6 +38,9 @@ class GoodsMakeIndex
             case 'redBullMake-gl':
                 $parent_id = 145;
                 break;
+            case 'mark-iphone':
+                $parent_id = 195;
+                break;
             default:
                 throw new CommonException(['msg' => '无此入口']);
         }

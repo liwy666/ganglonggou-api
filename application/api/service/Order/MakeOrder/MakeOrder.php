@@ -13,6 +13,7 @@ use app\api\model\GlGoods;
 use app\api\model\GlGoodsSku;
 use app\api\model\GlMakeOrder;
 use app\api\service\Email;
+use app\api\service\SerEmail;
 use app\lib\exception\CommonException;
 
 class MakeOrder
@@ -105,7 +106,17 @@ class MakeOrder
         /*发送邮件*/
         $head = '新预约提醒';
         $body = '  用户成功预约，预约入口：'.$this->intoType.'，预约单号：'.$this->makeOrderSn;
-        //(new Email())->setEmail($head,$body);
+        if (!config('my_config.debug')) {
+            //正式用
+            $address_array = [
+                '987303897@qq.com',
+                '382506262@qq.com'
+            ];
+        } else {
+            //测试用
+            $address_array = ['987303897@qq.com'];
+        }
+        (new SerEmail())->sendEmail($head, $body, $address_array);
 
     }
 

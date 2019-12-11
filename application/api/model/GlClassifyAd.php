@@ -13,7 +13,12 @@ use think\facade\Cache;
 
 class GlClassifyAd extends BaseModel
 {
-    public function getImgUrlAttr($value, $data)
+    public function getLogoImgAttr($value, $data)
+    {
+        return $this->spellOriginalImg($value, $data);
+    }
+
+    public function getBarImgAttr($value, $data)
     {
         return $this->spellOriginalImg($value, $data);
     }

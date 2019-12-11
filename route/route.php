@@ -24,6 +24,8 @@ Route::get('api/:version/goods_make/get_WxJsSdk', 'api/:version.WxShare/giveWxSh
 /*支付回调*/
 //微信公众号支付回调
 Route::any('api/:version/notify/wx_js_api_notify$', 'api/:version.notify.PayNotify/wxJsApiNotify');
+//微信App支付回调
+Route::any('api/:version/notify/wx_app_api_notify$', 'api/:version.notify.PayNotify/wxAppApiNotify');
 //农行支付回调
 Route::any('api/:version/notify/abc_notify$', 'api/:version.notify.PayNotify/abcPayNotify');
 //中行支付回调
@@ -86,6 +88,7 @@ Route::post('api/:version/cms/cms_upd_ad_img$', 'api/:version.cms.CmsIndexAd/upd
 Route::rule('api/:version/cms/cms_upd_ad_img$', 'api/:version.Option/returnTrue', 'OPTIONS');
 Route::post('api/:version/cms/cms_ease_upd_index_ad$', 'api/:version.cms.CmsIndexAd/easeUpdIndexAd');
 Route::get('api/:version/cms/cms_get_into_count$', 'api/:version.cms.CmsIndexAd/giveIntoCountList');
+Route::get('api/:version/cms/cms_get_data_zip_url$', 'api/:version.cms.CmsIndexAd/getDataZipUrl');
 //下架广告
 Route::post('api/:version/cms/cms_end_of_index_ad$', 'api/:version.cms.CmsIndexAd/endOfSaleIndexAd');
 //上架广告
@@ -124,6 +127,7 @@ Route::post('api/:version/cms/clean_user_goods_list_cache$', 'api/:version.Clean
 Route::post('api/:version/cms/clean_user_index_ad_list_cache$', 'api/:version.CleanCache/CleanUserIndexAdListCache');
 Route::post('api/:version/cms/clean_user_cat_list_cache$', 'api/:version.CleanCache/CleanUserCatListCache');
 Route::post('api/:version/cms/clean_user_classify_cache$', 'api/:version.CleanCache/CleanUserClassifyListCache');
+Route::post('api/:version/cms/clean_user_article_cache$', 'api/:version.CleanCache/CleanUserArticleCache');
 /*分类展示*/
 Route::get('api/:version/cms/cms_get_classify_ad_list$', 'api/:version.cms.CmsClassifyAd/giveListByPage');
 Route::get('api/:version/cms/cms_get_parent_classify_ad_list$', 'api/:version.cms.CmsClassifyAd/giveParentClassify');
@@ -141,7 +145,17 @@ Route::post('api/:version/cms/cms_add_article$', 'api/:version.cms.CmsArticle/ad
 Route::post('api/:version/cms/cms_upd_article$', 'api/:version.cms.CmsArticle/updArticle');
 Route::post('api/:version/cms/cms_del_article$', 'api/:version.cms.CmsArticle/delArticle');
 Route::get('api/:version/cms/cms_get_all_article$', 'api/:version.cms.CmsArticle/giveAllArticle');
-
+/*搜索历史*/
+Route::get('api/:version/cms/cms_get_all_search_log$', 'api/:version.cms.CmsSearchLog/giveSearchLogListByPage');
+Route::post('api/:version/cms/cms_add_search_log$', 'api/:version.cms.CmsSearchLog/addSearchLog');
+Route::post('api/:version/cms/cms_del_search_log$', 'api/:version.cms.CmsSearchLog/delSearchLog');
+Route::post('api/:version/cms/cms_verify_search_log$', 'api/:version.cms.CmsSearchLog/verifySearchLog');
+Route::post('api/:version/cms/cms_cancel_verify_search_log$', 'api/:version.cms.CmsSearchLog/cancelVerifySearchLog');
+/*APP更新*/
+Route::post('api/:version/cms/cms_upload_app$', 'api/:version.AppVersion/uploadApp');
+Route::rule('api/:version/cms/cms_upload_app$', 'api/:version.Option/returnTrue', 'OPTIONS');
+Route::post('api/:version/cms/cms_add_new_version_app$', 'api/:version.AppVersion/addNewVersionApp');
+Route::get('api/:version/cms/cms_get_app_version_info$', 'api/:version.AppVersion/getAppVersion');
 
 /*goods_make*/
 //获取首页信息
@@ -169,12 +183,6 @@ Route::get('api/:version/get_goods_info$', 'api/:version.common.Goods/giveGoodsI
 Route::get('api/:version/get_extra_goods_info$', 'api/:version.common.Goods/giveExtraGoodsInfo');
 //商品评价
 Route::get('api/:version/user_get_evaluate_by_goods_id_and_page$', 'api/:version.common.Evaluate/giveEvaluateListByGoodsIdAndPage');
-//登录
-Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
-Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
-Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
-Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
-Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 //领取优惠券
 Route::post('api/:version/user_get_coupon$', 'api/:version.common.Coupon/userGetCoupon');
 //用户优惠券
@@ -228,6 +236,29 @@ Route::post('api/:version/user_call_after_sale$', 'api/:version.common.AfterSale
 Route::get('api/:version/user_get_classify_ad_list$', 'api/:version.common.ClassifyAd/giveClassifyAdList');
 //获取文章
 Route::get('api/:version/user_get_article$', 'api/:version.common.Article/giveArticle');
+//获取搜索关键词
+Route::get('api/:version/user_get_search_log$', 'api/:version.common.SearchLog/getSearchLog');
+Route::post('api/:version/user_add_search_log$', 'api/:version.common.SearchLog/addSearchLog');
+//支付宝密钥
+Route::get('api/:version/get_ali_pay_merchant_private_key$', 'api/:version.common.AppConfig/getAliPayMerchantPrivateKey');
+//检查版本更新
+Route::get('api/:version/get_app_version$', 'api/:version.AppVersion/getAppVersion');
+
+
+/*登录*/
+Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
+Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
+Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
+Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
+Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
+Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
+Route::post('api/:version/android_user_login$', 'api/:version.common.Login/androidLogin');
+Route::post('api/:version/android_wx_login$', 'api/:version.common.Login/androidWeChatLogin');
+Route::post('api/:version/android_ali_pay_login$', 'api/:version.common.Login/androidAliPayLogin');
+//发送登录或重置密码的邮箱验证码
+Route::post('api/:version/send_retrieve_password_or_login_email_verify_code$', 'api/:version.common.User/sendRetrievePasswordOrLoginEmailVerifyCode');
+//通过邮箱验证码重置密码
+Route::post('api/:version/retrieve_password_by_email_verify_code$', 'api/:version.common.User/retrievePasswordByEmailVerifyCode');
 //pc端获取请求code
 Route::get('api/:version/user_get_pc_login_code$', 'api/:version.common.Login/pcGetLoginCode');
 //pc端通过wxOpenid登录
@@ -238,5 +269,20 @@ Route::post('api/:version/wx_write_pc_token$', 'api/:version.common.Login/writeP
 Route::post('api/:version/mobile_register_check$', 'api/:version.common.Register/checkMobileRegister');
 //手机端注册
 Route::post('api/:version/mobile_register$', 'api/:version.common.Register/mobileRegister');
-//手机端登录
-Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
+//通过邮箱号注册
+Route::post('api/:version/register_by_email$', 'api/:version.common.Register/registerAccountsByEmailAddress');
+//注册邮箱发送验证码
+Route::post('api/:version/send_register_email_verify_code$', 'api/:version.common.Register/sendRegisterEmailVerifyCode');
+
+
+/*阅读打卡*/
+//获取用户信息
+Route::get('api/:version/article_sign_get_user_info$', 'api/:version.article_sign.User/giveUserInfo');
+//开始签到
+Route::post('api/:version/article_sign_sign$', 'api/:version.article_sign.User/sign');
+//开始签到
+Route::post('api/:version/article_sign_join_activity$', 'api/:version.article_sign.User/joinActivity');
+//查看用户表
+Route::get('api/:version/cms/article_sign_get_user_list$', 'api/:version.article_sign.Cms/giveUserList');
+//创建分享链接
+Route::post('api/:version/cms/create_share_url$', 'api/:version.article_sign.Cms/createShareUrl');

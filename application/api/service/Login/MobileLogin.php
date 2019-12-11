@@ -84,9 +84,8 @@ class MobileLogin extends BaseLogin
         $result['user_id'] = $user_info['user_id'];
         $result['into_type'] = $this->intoType;
         $result['son_into_type'] = $this->sonIntoType;
-        $token = self::saveToCache($result);
+        $token = self::saveToCache7Day($result);
 
         return $token;
-
     }
 }

@@ -8,7 +8,10 @@
         "yuan1994/tp-mailer": "dev-master",
         "topthink/think-image": "dev-master",
         "hassankhan/config": "dev-master",
-        "naixiaoxin/think-wechat": "dev-master"
+        "naixiaoxin/think-wechat": "dev-master",
+      "ext-curl": "*",
+      "ext-json": "*",
+      "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {

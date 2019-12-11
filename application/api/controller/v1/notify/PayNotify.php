@@ -11,6 +11,7 @@ namespace app\api\controller\v1\notify;
 
 use app\api\service\OrderPayment\AbcPayment;
 use app\api\service\OrderPayment\PcAliPayment;
+use app\api\service\OrderPayment\WxAppApiPayment;
 use app\api\service\OrderPayment\WxJsApiPayment;
 use think\facade\Log;
 
@@ -29,12 +30,23 @@ class PayNotify
     }
 
     /**
-     *微信支付回调
+     * 微信支付回调
      */
     public function wxJsApiNotify()
     {
 
         $result = (new WxJsApiPayment())->notifyProcess();
+
+        return $result;
+    }
+
+    /**
+     *微信APP支付回调
+     */
+    public function wxAppApiNotify()
+    {
+
+        $result = (new WxAppApiPayment())->notifyProcess();
 
         return $result;
     }

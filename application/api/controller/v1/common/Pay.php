@@ -45,7 +45,7 @@ class Pay
             ->select();
 
         if (count($result) === 0) {
-            throw new CommonException(['msg' => '无有效支付方式']);
+            throw new CommonException(['msg' => '无有效支付方式', 'error_code' => '20001']);
         }
 
         foreach ($result as $k => $v) {
@@ -63,22 +63,24 @@ class Pay
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
-     * 订单支付
+     * 常规订单支付
      */
     public function OrderPayment()
     {
-
         //验证必要
-        (new CurrencyValidate())->myGoCheck(['order_sn', 'user_token', 'success_url', 'back_url'], 'require');
+        (new CurrencyValidate())->myGoCheck(['order_sn', 'user_token'], 'require');
 
         $PaymentClass = new Payment();
         $PaymentClass->userToken = request()->param('user_token');
         $PaymentClass->orderSn = request()->param('order_sn');
-        $PaymentClass->successUrl = request()->param('success_url');
-        $PaymentClass->backUrl = request()->param('back_url');
-
+        if (request()->param('success_url')) {
+            $PaymentClass->successUrl = request()->param('success_url');
+        }
+        if (request()->param('back_url')) {
+            $PaymentClass->backUrl = request()->param('back_url');
+        }
         return $PaymentClass->orderPayment();
-
     }
+
 
 }

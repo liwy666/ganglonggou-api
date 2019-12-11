@@ -12,6 +12,9 @@ namespace app\api\controller\v1\common;
 use app\api\model\GlUser;
 use app\api\service\Login\AbcAppLogin;
 use app\api\service\Login\AbcWxLogin;
+use app\api\service\Login\AndroidLogin;
+use app\api\service\Login\AppAliPayLogin;
+use app\api\service\Login\AppWeChatLogin;
 use app\api\service\Login\BaseLogin;
 use app\api\service\Login\MobileLogin;
 use app\api\service\Login\PcLogin;
@@ -211,5 +214,62 @@ class Login
         $password = request()->param('password');
 
         return (new MobileLogin())->mobilLogin($phone, $password);
+    }
+
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 安卓用户登录
+     */
+    public function androidLogin()
+    {
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['email_address', 'password'], 'require');
+        $email_address = request()->param('email_address');
+        $password = request()->param('password');
+
+        return (new AndroidLogin())->login($email_address, $password);
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 安卓用户微信登录
+     */
+    public function androidWeChatLogin()
+    {
+        (new CurrencyValidate())->myGoCheck(['code'], 'require');
+        $code = request()->param('code');
+
+        return (new AppWeChatLogin($code, 'android'))->getToken();
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 安卓用户支付宝登录
+     */
+    public function androidAliPayLogin()
+    {
+        (new CurrencyValidate())->myGoCheck(['code'], 'require');
+        $code = request()->param('code');
+
+        return (new AppAliPayLogin($code, 'android'))->getToken();
     }
 }

@@ -21,6 +21,5 @@ class WxShare
         $url = request()->param('url');
 
         return (new JsSdk())->giveSignature($url);
-        //return (new JsSdk())->giveTestSignature($url);
     }
 }

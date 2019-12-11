@@ -24,7 +24,7 @@ class SerSupplierPreview
      * @throws \think\exception\DbException
      * 供应商缩略
      */
-    public function giveSupplierPreviewByGoodsId($goods_id)
+    public function giveSupplierPreviewByGoodsId($goods_id, $parent_id)
     {
         $goods_info = GlGoods::where([
             ['goods_id', '=', $goods_id]
@@ -37,12 +37,7 @@ class SerSupplierPreview
             ->field('allow_del,is_del', true)
             ->find();
 
-        $parent_info = GlCategory::where([
-            ['cat_id', '=', $goods_info['cat_id']]
-        ])->find();
-
-
-        $supplier_info['goods_list'] = GlGoods::giveGoodsListBySupplierId($goods_info['supplier_id'], 6, $parent_info['parent_id']);
+        $supplier_info['goods_list'] = GlGoods::giveGoodsListBySupplierId($goods_info['supplier_id'], $parent_id, 6);
 
         return $supplier_info;
     }

@@ -98,7 +98,7 @@ class Order
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
-     * 返回用户所以订单
+     * 返回用户所有订单
      */
     public function giveAllOrderByUserId()
     {
@@ -130,7 +130,6 @@ class Order
         }
 
         return $order_list;
-
     }
 
     /**

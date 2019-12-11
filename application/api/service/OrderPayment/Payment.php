@@ -35,6 +35,7 @@ class Payment
     protected $byStagesInfo;//分期方式信息
     public $successUrl;
     public $backUrl;
+    public $payTime;
 
     public function __construct()
     {
@@ -149,8 +150,14 @@ class Payment
             case 'WxJsApiPayment':
                 $PayClass = new WxJsApiPayment();
                 break;
+            case 'WxAppApiPayment':
+                $PayClass = new WxAppApiPayment();
+                break;
             case 'PcAliPayment':
                 $PayClass = new PcAliPayment();
+                break;
+            case 'AppAliPayment':
+                $PayClass = new AppAliPayment();
                 break;
             default:
                 throw new CommonException(['无效支付方式,该支付方式或已关闭']);
@@ -358,11 +365,11 @@ class Payment
                 //正式用
                 $address_array = [
                     '987303897@qq.com',
+                    '382506262@qq.com',
                     '3001374619@qq.com',
                     '3001397358@qq.com',
                     '3001306821@qq.com',
                     '3004391423@qq.com',
-                    '811718475@qq.com'
                 ];
             } else {
                 //测试用
@@ -396,11 +403,11 @@ class Payment
             //正式用
             $address_array = [
                 '987303897@qq.com',
+                '382506262@qq.com',
                 '3001374619@qq.com',
                 '3001397358@qq.com',
                 '3001306821@qq.com',
                 '3004391423@qq.com',
-                '811718475@qq.com'
             ];
         } else {
             //测试用
