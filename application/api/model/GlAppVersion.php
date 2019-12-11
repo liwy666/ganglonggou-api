@@ -19,4 +19,13 @@ class GlAppVersion extends BaseModel
             return $value;
         }
     }
+
+    public function getDownloadUrlAttr($value)
+    {
+        if ($value != null) {
+            return config('my_config.api_url').$value;
+        } else {
+            return $value;
+        }
+    }
 }

@@ -13,7 +13,7 @@ use app\api\model\GlAppVersion;
 use app\api\service\Upload\Upload;
 use app\api\service\UserAuthority;
 use app\api\validate\CurrencyValidate;
-use function GuzzleHttp\Psr7\build_query;
+
 
 class AppVersion
 {

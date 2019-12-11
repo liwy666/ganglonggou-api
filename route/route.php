@@ -241,6 +241,8 @@ Route::get('api/:version/user_get_search_log$', 'api/:version.common.SearchLog/g
 Route::post('api/:version/user_add_search_log$', 'api/:version.common.SearchLog/addSearchLog');
 //支付宝密钥
 Route::get('api/:version/get_ali_pay_merchant_private_key$', 'api/:version.common.AppConfig/getAliPayMerchantPrivateKey');
+//检查版本更新
+Route::get('api/:version/get_app_version$', 'api/:version.AppVersion/getAppVersion');
 
 
 /*登录*/
