@@ -41,14 +41,15 @@ class Test extends Controller
 {
     public function test()
     {
-       $str = 'success=true&result_code=200&app_id=2017110609764829&auth_code=2c65b24b77554c1482f0f98ab017YX40&scope=kuaijie&alipay_open_id=20880050551716885137578560816740&user_id=2088702746395409&target_id=1574405082';
-        $arr = explode('&', $str);//转成数组
-        $res = array();
-        foreach ($arr as $k => $v) {
-            $arr = explode('=', $v);
-            $res[$arr[0]] = $arr[1];
-        }
-        return $res;
+//       $str = 'success=true&result_code=200&app_id=2017110609764829&auth_code=2c65b24b77554c1482f0f98ab017YX40&scope=kuaijie&alipay_open_id=20880050551716885137578560816740&user_id=2088702746395409&target_id=1574405082';
+//        $arr = explode('&', $str);//转成数组
+//        $res = array();
+//        foreach ($arr as $k => $v) {
+//            $arr = explode('=', $v);
+//            $res[$arr[0]] = $arr[1];
+//        }
+//        return $res;
+        return true;
     }
 
 

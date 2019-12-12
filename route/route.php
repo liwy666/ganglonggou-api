@@ -286,3 +286,11 @@ Route::post('api/:version/article_sign_join_activity$', 'api/:version.article_si
 Route::get('api/:version/cms/article_sign_get_user_list$', 'api/:version.article_sign.Cms/giveUserList');
 //创建分享链接
 Route::post('api/:version/cms/create_share_url$', 'api/:version.article_sign.Cms/createShareUrl');
+//添加反馈信息
+Route::post('api/:version/add_feed_back$', 'api/:version.FeedBack/addFeedBack');
+//查看反馈信息
+Route::get('api/:version/feed_back$','api/:version.FeedBack/mainFeedBack');
+//处理反馈信息
+Route::post('api/:version/handle_feed_back$','api/:version.FeedBack/handleFeedBack');
+//删除反馈信息
+Route::post('api/:version/del_feed_back$','api/:version.FeedBack/delFeedBack');
