@@ -15,6 +15,14 @@ class FeedBack
       $data['problem_details'] = request()->param('problem_details');
       $data['contact'] = request()->param('contact');
       $data['img_files_url'] = request()->param('img_files_url');
+      if(strlen($data['problem_details'])<5){
+          throw new CommonException(['msg' => '反馈内容至少输入5个字符']);
+      }
+      $pattern = '/^[a-z0-9]+([._-][a-z0-9]+)*@([0-9a-z]+\.[a-z]{2,14}(\.[a-z]{2})?)$/i';
+      $search = '/^0?1[3|4|5|6|7|8][0-9]\d{8}$/';
+      if(!preg_match($pattern,$data['contact'])&&!preg_match( $search,$data['contact'])){
+          throw new CommonException(['msg' => '联系方式错误']);
+      }
       $data['add_time'] = time();
       GlFeedBack::create($data);
       return true;
