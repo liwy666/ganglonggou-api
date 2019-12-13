@@ -18,6 +18,7 @@ use app\api\validate\CurrencyValidate;
 class AppVersion
 {
 
+
     public function getAppVersion()
     {
         (new CurrencyValidate())->myGoCheck(['platform'], 'require');
@@ -52,8 +53,10 @@ class AppVersion
         $describe = request()->param('describe');
         if (request()->param('download_url')) {
             $download_url = removeImgUrl(request()->param('download_url'), config('my_config.api_url'));
+            $file_size = request()->param('file_size');
         } else {
             $download_url = null;
+            $file_size = null;
         }
 
         GlAppVersion::create([
@@ -61,6 +64,7 @@ class AppVersion
             "app_version" => $version,
             "describe" => $describe,
             "download_url" => $download_url,
+            "file_size" => $file_size,
             "add_time" => time(),
         ]);
 

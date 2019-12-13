@@ -11,7 +11,9 @@ namespace app\api\service\Upload;
 
 use app\lib\exception\CommonException;
 use think\Controller;
+use think\Facade;
 use think\Image;
+use think\log\driver\File;
 
 class Upload extends Controller
 {
@@ -54,11 +56,12 @@ class Upload extends Controller
     public function appUpload($ext = 'apk,ipa')
     {
         $file = request()->file('app');
-        if (!$file) throw new CommonException(['msg' => '未获取到有效图片']);
+        if (!$file) throw new CommonException(['msg' => '未获取到有效文件']);
         $info = $file->validate(['ext' => $ext])->move(config('my_config.public_file'));
-        if (!$info) throw new CommonException(['msg' => '上传图片失败:' . $file->getError()]);
+        if (!$info) throw new CommonException(['msg' => '上传文件失败:' . $file->getError()]);
         $file_name = str_replace("\\", "/", $info->getSaveName());
         $result['download_path'] = config('my_config.api_url') . 'download/' . $file_name;
+        $result['file_size'] = $file->getSize();
         return $result;
     }
 }

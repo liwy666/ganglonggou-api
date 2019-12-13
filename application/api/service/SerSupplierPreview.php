@@ -16,7 +16,9 @@ class SerSupplierPreview
 {
     /**
      * @param $goods_id
+     * @param $parent_id
      * @return array|\PDOStatement|string|\think\Model|null
+     * @throws \app\lib\exception\CommonException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
