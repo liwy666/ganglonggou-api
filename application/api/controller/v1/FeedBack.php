@@ -1,6 +1,4 @@
 <?php
-
-
 namespace app\api\controller\v1;
 use app\api\model\GlFeedBack;
 use app\api\service\UserAuthority;
@@ -9,6 +7,11 @@ use app\lib\exception\CommonException;
 
 class FeedBack
 {
+    /**
+     * @return bool
+     * @throws CommonException
+     * 添加反馈信息
+     */
   public function addFeedBack(){
       (new CurrencyValidate())->myGoCheck(['feed_back_type', 'problem_details','contact'], 'require');
       $data['feed_back_type'] = request()->param('feed_back_type');
@@ -27,6 +30,15 @@ class FeedBack
       GlFeedBack::create($data);
       return true;
   }
+
+    /**
+     * @return mixed
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 反馈信息
+     */
   public function mainFeedBack(){
       UserAuthority::checkAuthority(8);
       (new CurrencyValidate())->myGoCheck(['page', 'limit'], 'require');
@@ -34,9 +46,17 @@ class FeedBack
       $page=request()->param('page');
       $limit=request()->param('limit');
       $result['list']=GlFeedBack::where('is_del','=',0)->order('add_time desc')->page($page,$limit)->select();
-      $result['count']=GlFeedBack::all()->count();
+      $result['count']=GlFeedBack::where('is_del','=',0)->count();
       return $result;
   }
+
+    /**
+     * @return bool
+     * @throws CommonException
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     * 处理反馈信息
+     */
   public function handleFeedBack(){
       UserAuthority::checkAuthority(8);
       (new CurrencyValidate())->myGoCheck(['feed_back_id'], 'require');
@@ -53,6 +73,14 @@ class FeedBack
       }
       return true;
   }
+
+    /**
+     * @return bool
+     * @throws CommonException
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     * 删除反馈信息
+     */
     public function delFeedBack(){
       UserAuthority::checkAuthority(8);
         (new CurrencyValidate())->myGoCheck(['feed_back_id'], 'require');
