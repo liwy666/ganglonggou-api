@@ -23,6 +23,7 @@ class CleanCache
             ->select();
         foreach ($cat_array as $k => $v) {
             Cache::rm($v['parent_id'] . '_user_goods_list');
+            Cache::rm($v['parent_id'] . '_supplier_goods_list');
         }
 
         return true;

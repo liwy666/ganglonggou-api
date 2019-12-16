@@ -9,6 +9,7 @@
 namespace app\api\service;
 
 
+use app\api\model\GlCategory;
 use app\api\model\GlGoods;
 use app\api\model\GlSupplier;
 

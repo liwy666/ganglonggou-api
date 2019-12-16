@@ -97,6 +97,7 @@ class GlGoods extends BaseModel
      * @param $supplier_id
      * @param $parent_id
      * @param $number
+     * @param $parent_id
      * @return array|\PDOStatement|string|\think\Collection
      * @throws CommonException
      * @throws \think\db\exception\DataNotFoundException
