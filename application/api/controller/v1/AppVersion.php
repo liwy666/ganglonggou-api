@@ -50,6 +50,7 @@ class AppVersion
         UserAuthority::checkAuthority(8);
         $platform = request()->param('platform');
         $version = request()->param('app_version');
+        $build_number = request()->param('build_number');
         $describe = request()->param('describe');
         if (request()->param('download_url')) {
             $download_url = removeImgUrl(request()->param('download_url'), config('my_config.api_url'));
@@ -62,6 +63,7 @@ class AppVersion
         GlAppVersion::create([
             "platform" => $platform,
             "app_version" => $version,
+            "build_number" => $build_number,
             "describe" => $describe,
             "download_url" => $download_url,
             "file_size" => $file_size,

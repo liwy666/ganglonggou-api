@@ -17,7 +17,7 @@ class FeedBack
       $data['feed_back_type'] = request()->param('feed_back_type');
       $data['problem_details'] = request()->param('problem_details');
       $data['contact'] = request()->param('contact');
-      $data['img_files_url'] = request()->param('img_files_url');
+      $data['img_files_url'] =  request()->param('img_files_url');
       if(strlen($data['problem_details'])<5){
           throw new CommonException(['msg' => '反馈内容至少输入5个字符']);
       }
