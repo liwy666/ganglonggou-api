@@ -23,6 +23,9 @@ class FeedBack
         if (strlen($data['problem_details']) < 5) {
             throw new CommonException(['msg' => '反馈内容至少输入5个字符']);
         }
+        if (strlen($data['problem_details'])>250){
+            throw new CommonException(['msg' => '反馈内容太长']);
+        }
         $pattern = '/^[a-z0-9]+([._-][a-z0-9]+)*@([0-9a-z]+\.[a-z]{2,14}(\.[a-z]{2})?)$/i';
         $search = '/^0?1[3|4|5|6|7|8][0-9]\d{8}$/';
         if (!preg_match($pattern, $data['contact']) && !preg_match($search, $data['contact'])) {
