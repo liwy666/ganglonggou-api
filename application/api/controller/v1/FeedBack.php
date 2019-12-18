@@ -15,10 +15,12 @@ class FeedBack
      */
     public function addFeedBack()
     {
-        (new CurrencyValidate())->myGoCheck(['feed_back_type', 'problem_details', 'contact'], 'require');
+        (new CurrencyValidate())->myGoCheck(['feed_back_type', 'problem_details', 'contact','v_num','platform'], 'require');
         $data['feed_back_type'] = request()->param('feed_back_type');
         $data['problem_details'] = request()->param('problem_details');
         $data['contact'] = request()->param('contact');
+        $data['v_num']=request()->param('v_num');
+        $data['platform'] = request()->param('platform');
         $img_files_url = request()->param('img_files_url');
         if (strlen($data['problem_details']) < 5) {
             throw new CommonException(['msg' => '反馈内容至少输入5个字符']);
