@@ -255,6 +255,10 @@ Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobile
 Route::post('api/:version/android_user_login$', 'api/:version.common.Login/androidLogin');
 Route::post('api/:version/android_wx_login$', 'api/:version.common.Login/androidWeChatLogin');
 Route::post('api/:version/android_ali_pay_login$', 'api/:version.common.Login/androidAliPayLogin');
+Route::post('api/:version/ios_user_login$', 'api/:version.common.Login/iosLogin');
+Route::post('api/:version/ios_wx_login$', 'api/:version.common.Login/iosWeChatLogin');
+Route::post('api/:version/ios_ali_pay_login$', 'api/:version.common.Login/iosAliPayLogin');
+
 //发送登录或重置密码的邮箱验证码
 Route::post('api/:version/send_retrieve_password_or_login_email_verify_code$', 'api/:version.common.User/sendRetrievePasswordOrLoginEmailVerifyCode');
 //通过邮箱验证码重置密码

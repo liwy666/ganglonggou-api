@@ -16,6 +16,7 @@ use app\api\service\Login\AndroidLogin;
 use app\api\service\Login\AppAliPayLogin;
 use app\api\service\Login\AppWeChatLogin;
 use app\api\service\Login\BaseLogin;
+use app\api\service\Login\IosLogin;
 use app\api\service\Login\MobileLogin;
 use app\api\service\Login\PcLogin;
 use app\api\service\Login\TestLogin;
@@ -245,6 +246,26 @@ class Login
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      * @throws \think\exception\PDOException
+     * ios用户登录
+     */
+    public function iosLogin()
+    {
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['email_address', 'password'], 'require');
+        $email_address = request()->param('email_address');
+        $password = request()->param('password');
+
+        return (new IosLogin())->login($email_address, $password);
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      * 安卓用户微信登录
      */
     public function androidWeChatLogin()
@@ -270,7 +291,7 @@ class Login
         (new CurrencyValidate())->myGoCheck(['code'], 'require');
         $code = request()->param('code');
 
-        return (new AppWeChatLogin($code, 'android'))->getToken();
+        return (new AppWeChatLogin($code, 'ios'))->getToken();
     }
 
     /**
@@ -289,5 +310,23 @@ class Login
         $code = request()->param('code');
 
         return (new AppAliPayLogin($code, 'android'))->getToken();
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * ios用户支付宝登录
+     */
+    public function iosAliPayLogin()
+    {
+        (new CurrencyValidate())->myGoCheck(['code'], 'require');
+        $code = request()->param('code');
+
+        return (new AppAliPayLogin($code, 'ios'))->getToken();
     }
 }
