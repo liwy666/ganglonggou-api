@@ -45,7 +45,6 @@ class Test extends Controller
         $arr = explode(',', $str);//转成数组
         $arr_day_time = [];
         $arr_week = [];
-        $arr_week_time = [];
         foreach ($arr as $k => $v) {
             $timestamp = strtotime($v);
             $h = date('H', $timestamp);
@@ -74,7 +73,7 @@ class Test extends Controller
             foreach ($arr as $k => $v) {
                 $timestamp = strtotime($v);
                 $h = date("D H", $timestamp);
-                if(stristr($h,$k2)){
+                if (stristr($h, $k2)) {
                     if (array_key_exists($h, $arr_week_time[$k2])) {
                         $arr_week_time[$k2][$h]++;
                     } else {
@@ -97,7 +96,7 @@ class Test extends Controller
             }
         }
         arsort($arr_goods_name);
-        return ["day_time" => $arr_day_time, "week" => $arr_week,"week_time"=>$arr_week_time,"goods_name"=>$arr_goods_name];
+        return ["day_time" => $arr_day_time, "week" => $arr_week, "week_time" => $arr_week_time, "goods_name" => $arr_goods_name];
     }
 
 
