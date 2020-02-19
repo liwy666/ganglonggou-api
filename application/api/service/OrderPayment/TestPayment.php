@@ -10,7 +10,7 @@ class TestPayment
     {
         $PaymentClass = new Payment();
         $PaymentClass->orderSn = $order_info['order_sn'];
-        $PaymentClass->OrderPaySuccess();
+        $PaymentClass->OrderPaySuccess([]);
         return true;
     }
 }
