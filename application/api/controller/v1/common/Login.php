@@ -263,6 +263,24 @@ class Login
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      * @throws \think\exception\PDOException
+     * ios用户微信登陆
+     */
+    public function iosWeChatLogin()
+    {
+        (new CurrencyValidate())->myGoCheck(['code'], 'require');
+        $code = request()->param('code');
+
+        return (new AppWeChatLogin($code, 'android'))->getToken();
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      * 安卓用户支付宝登录
      */
     public function androidAliPayLogin()
