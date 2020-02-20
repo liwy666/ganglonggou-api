@@ -53,7 +53,6 @@ class Pay
         //剔除测试支付
         if ($user_id === 2) {
             $pay_list = $temp_pay_list;
-
         } else {
             foreach ($temp_pay_list as $k => $v) {
                 if ($v["pay_code"] !== 'TestPayment') {
