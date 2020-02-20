@@ -35,27 +35,38 @@ class Pay
         //获取用户信息
         $user_token = request()->param("user_token");
         $user_desc = BaseLogin::getCurrentIdentity(['user_id', 'into_type', 'son_into_type'], $user_token);
+        $user_id = $user_desc['user_id'];
         $into_type = $user_desc['into_type'];
         $son_into_type = $user_desc['son_into_type'];
+        $pay_list = [];
 
-        $result = GlPayType::where([['into_type', '=', $into_type]
+        $temp_pay_list = GlPayType::where([['into_type', '=', $into_type]
             , ['son_into_type', '=', $son_into_type]
             , ['is_del', '=', 0]])
             ->field('pay_code,pay_name,pay_id')
             ->select();
 
-        if (count($result) === 0) {
+        //剔除测试支付
+        if ($user_id !== 2 && count($temp_pay_list) > 2) {
+            foreach ($temp_pay_list as $k => $v) {
+                if ($v["pay_code"] !== 'TestPayment') {
+                    array_push($pay_list, $v);
+                }
+            }
+        }
+
+        if (count($pay_list) === 0) {
             throw new CommonException(['msg' => '无有效支付方式', 'error_code' => '20001']);
         }
 
-        foreach ($result as $k => $v) {
-            $result[$k]['ByStages'] = GlByStages::where([['pay_code', '=', $v['pay_code']]
+        foreach ($pay_list as $k => $v) {
+            $pay_list[$k]['ByStages'] = GlByStages::where([['pay_code', '=', $v['pay_code']]
                 , ['is_del', '=', 0]])
                 ->field('is_del,bystages_planCode', true)
                 ->select();
         }
 
-        return $result;
+        return $pay_list;
     }
 
     /**
