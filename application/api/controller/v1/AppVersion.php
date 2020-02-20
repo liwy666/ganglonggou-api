@@ -52,6 +52,7 @@ class AppVersion
         $version = request()->param('app_version');
         $build_number = request()->param('build_number');
         $describe = request()->param('describe');
+        $ios_app_id = request()->param('ios_app_id');
         if (request()->param('download_url')) {
             $download_url = removeImgUrl(request()->param('download_url'), config('my_config.api_url'));
             $file_size = request()->param('file_size');
@@ -67,6 +68,7 @@ class AppVersion
             "describe" => $describe,
             "download_url" => $download_url,
             "file_size" => $file_size,
+            "ios_app_id" => $ios_app_id,
             "add_time" => time(),
         ]);
 
