@@ -46,7 +46,7 @@ class Pay
             ->field('pay_code,pay_name,pay_id')
             ->select();
 
-        if (count($pay_list) === 0) {
+        if (count($temp_pay_list) === 0) {
             throw new CommonException(['msg' => '无有效支付方式', 'error_code' => '20001']);
         }
 
