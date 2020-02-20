@@ -46,8 +46,15 @@ class Pay
             ->field('pay_code,pay_name,pay_id')
             ->select();
 
+        if (count($pay_list) === 0) {
+            throw new CommonException(['msg' => '无有效支付方式', 'error_code' => '20001']);
+        }
+
         //剔除测试支付
-        if ($user_id !== 2 && count($temp_pay_list) > 2) {
+        if ($user_id === 2) {
+            $pay_list = $temp_pay_list;
+
+        } else {
             foreach ($temp_pay_list as $k => $v) {
                 if ($v["pay_code"] !== 'TestPayment') {
                     array_push($pay_list, $v);
@@ -55,9 +62,6 @@ class Pay
             }
         }
 
-        if (count($pay_list) === 0) {
-            throw new CommonException(['msg' => '无有效支付方式', 'error_code' => '20001']);
-        }
 
         foreach ($pay_list as $k => $v) {
             $pay_list[$k]['ByStages'] = GlByStages::where([['pay_code', '=', $v['pay_code']]
