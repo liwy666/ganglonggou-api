@@ -51,7 +51,8 @@ class SearchLog
         $into_type = request()->param('into_type');
         $son_into_type = request()->param('son_into_type');
         $search_keyword = request()->param('search_keyword');
-        if (count($search_keyword) > 30) return false;
+
+        if (strlen($search_keyword) > 30) return false;
 
         $set_inc_count = GlSearchLog::where([
             ['search_keyword', '=', $search_keyword]

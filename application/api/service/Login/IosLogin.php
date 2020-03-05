@@ -73,10 +73,10 @@ class IosLogin extends BaseLogin
             ['is_del', '=', 0]
         ])->find();
         if (!$user_info) {
-            throw new CommonException(['msg' => '无此用户','error_code'=>10001]);
+            throw new CommonException(['msg' => '无此用户', 'error_code' => 10001]);
         }
         if ($user_info['user_password'] !== $password) {
-            throw new CommonException(['msg' => '密码错误','error_code'=>10003]);
+            throw new CommonException(['msg' => '密码错误', 'error_code' => 10003]);
         }
 
         self::recordUserLogin($user_info['user_id']);
@@ -84,8 +84,6 @@ class IosLogin extends BaseLogin
         $result['user_id'] = $user_info['user_id'];
         $result['into_type'] = $this->intoType;
         $result['son_into_type'] = $this->sonIntoType;
-        $token = self::saveToCache7Day($result);
-
-        return $token;
+        return self::saveToCache7Day($result);
     }
 }

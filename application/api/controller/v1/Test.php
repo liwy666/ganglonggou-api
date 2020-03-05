@@ -41,8 +41,7 @@ class Test extends Controller
 {
     public function test()
     {
-        sleep(3);
-        return true;
+        return strlen('asdasdas');
     }
 
     private function getOrderInfo()

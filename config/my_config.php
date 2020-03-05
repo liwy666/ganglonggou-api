@@ -22,6 +22,8 @@ return [
     'public_file' => dirname(\think\facade\Env::get('root_path')) . '/main/public/download/',
     //apiUrl
     'api_url' => $json_array['api_url'],
+    //localUrl
+    'local_url' => $json_array['local_url'],
     //日志文件
     'log_file' => dirname(\think\facade\Env::get('root_path')) . '/runtime/log/',
     //缓存文件

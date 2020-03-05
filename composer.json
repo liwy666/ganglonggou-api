@@ -11,7 +11,8 @@
     "naixiaoxin/think-wechat": "dev-master",
     "ext-curl": "*",
     "ext-json": "*",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "phpmailer/phpmailer": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -24,8 +25,14 @@
   "authors": [
     {
       "name": "liwy666",
-      "email": "987303897@qq.com"
+      "email": "987303897@qq.com"                                                                                                                                                                                                                                                                        
     }
   ],
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
 }

@@ -203,10 +203,9 @@ class User
             ]);
 
         $result['user_id'] = $user_info['user_id'];
-        $result['into_type'] = $son_into_type;
+        $result['into_type'] = $into_type;
         $result['son_into_type'] = $son_into_type;
-        $token = BaseLogin::saveToCache7Day($result);
+        return BaseLogin::saveToCache7Day($result);
 
-        return $token;
     }
 }

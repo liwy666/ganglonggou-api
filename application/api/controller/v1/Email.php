@@ -26,10 +26,10 @@ class Email
 
         $head = request()->param('head');
         $body = request()->param('body');
-        $address_array =  json_decode(request()->param('address_array'),true) ;
+        $address_array = json_decode(request()->param('address_array'), true);
 
 
-        (new SerEmail())->setEmail($head,$body,$address_array);
+        (new SerEmail())->setEmail($head, $body, $address_array);
 
     }
 }
