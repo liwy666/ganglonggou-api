@@ -104,6 +104,7 @@ Route::post('api/:version/cms/cms_upd_coupon$', 'api/:version.cms.CmsCoupon/updC
 Route::post('api/:version/cms/cms_del_coupon$', 'api/:version.cms.CmsCoupon/delCoupon');
 //订单
 Route::get('api/:version/cms/cms_get_order_list$', 'api/:version.cms.CmsOrder/giveOrderListByPage');
+Route::get('api/:version/cms/cms_import_order_list$', 'api/:version.cms.CmsOrder/importOrderList');
 Route::get('api/:version/cms/cms_get_order_info$', 'api/:version.cms.CmsOrder/giveOrderInfo');
 Route::get('api/:version/cms/cms_get_extra_order_info$', 'api/:version.cms.CmsOrder/extraOrderInfoByOrderSn');
 Route::get('api/:version/cms/cms_pay_query$', 'api/:version.cms.CmsOrder/OrderPaymentQuery');
@@ -249,6 +250,7 @@ Route::get('api/:version/get_app_version$', 'api/:version.AppVersion/getAppVersi
 Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
 Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
 Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
+Route::post('api/:version/abc_new_app_login$', 'api/:version.common.Login/abcNewAppLogin');
 Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
 Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');

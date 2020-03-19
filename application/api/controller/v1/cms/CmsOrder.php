@@ -46,8 +46,42 @@ class CmsOrder
         if (request()->param('logistics_address_phone') !== '') {
             array_push($where, ['logistics_tel', 'like', '%' . request()->param('logistics_address_phone') . '%']);
         }
+        /*订单状态*/
         if (request()->param('order_state') !== 'all') {
-            array_push($where, ['order_state', '=', request()->param('order_state')]);
+            /*
+             * {value: 'all', label: '所有订单'},
+             * {value: 'pending_pay', label: '待支付订单'},
+             * {value: 'pending_delivery', label: '待发货'},
+             *{value: 'pending_take', label: '待收货'},
+             *{value: 'pending_service', label: '退换售后'},*/
+            switch (request()->param("order_state")) {
+                case 'pending_pay':
+                    array_push($where, ['order_state', '=', 1]);
+                    break;
+                case 'pending_delivery':
+                    array_push($where, ['order_state', '=', 2]);
+                    break;
+                case 'pending_take':
+                    array_push($where, ['order_state', '=', 3]);
+                    break;
+                case 'pending_service':
+                    array_push($where, ['order_state', '>=', 6]);
+                    break;
+
+            }
+
+        }
+        /*订单入口*/
+
+        if (request()->param('son_into_type') !== 'all') {
+            /*{value: 'all', label: '所有入口'},
+           {value: 'wx', label: '微信入口'},
+           {value: 'abc', label: '农行入口'},
+           {value: 'ios', label: 'ios客户端'},
+           {value: 'android', label: 'android客户端'},
+           {value: 'pc', label: 'pc端'},*/
+            array_push($where, ['son_into_type', '=', request()->param('son_into_type')]);
+
         }
         $result['list'] = GlOrder::where($where)
             ->page($data['page'], $data['limit'])
@@ -56,6 +90,62 @@ class CmsOrder
 
         $result['count'] = GlOrder::where($where)
             ->count();
+
+        return $result;
+
+    }
+
+    /**
+     * @return mixed
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 导出订单
+     */
+    public function importOrderList()
+    {
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['start_time', 'end_time'], 'require');
+        //验证正整数
+        (new CurrencyValidate())->myGoCheck(['start_time', 'end_time'], 'positiveInt');
+
+
+        UserAuthority::checkAuthority(8);
+        $where = [['is_del', '=', 0]];
+
+        /*下单时间*/
+        array_push($where, ['create_time', '>=', request()->param('start_time')]);
+        array_push($where, ['create_time', '<=', request()->param('end_time')]);
+
+        /*订单状态*/
+        if (request()->param('order_state') !== 'all') {
+            switch (request()->param("order_state")) {
+                case 'pending_pay':
+                    array_push($where, ['order_state', '=', 1]);
+                    break;
+                case 'pending_delivery':
+                    array_push($where, ['order_state', '=', 2]);
+                    break;
+                case 'pending_take':
+                    array_push($where, ['order_state', '=', 3]);
+                    break;
+                case 'pending_service':
+                    array_push($where, ['order_state', '>=', 6]);
+                    break;
+
+            }
+
+        }
+        /*订单入口*/
+        if (request()->param('son_into_type') !== 'all') {
+            array_push($where, ['son_into_type', '=', request()->param('son_into_type')]);
+
+        }
+
+        $result['list'] = GlOrder::where($where)
+            ->order('create_time desc')
+            ->select();
 
         return $result;
 

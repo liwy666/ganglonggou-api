@@ -11,6 +11,7 @@ namespace app\api\controller\v1\common;
 
 use app\api\model\GlUser;
 use app\api\service\Login\AbcAppLogin;
+use app\api\service\Login\AbcNewAppLogin;
 use app\api\service\Login\AbcWxLogin;
 use app\api\service\Login\AndroidLogin;
 use app\api\service\Login\AppAliPayLogin;
@@ -96,6 +97,24 @@ class Login
         (new CurrencyValidate())->myGoCheck(['abc_app_appid', 'id'], 'require');
 
         return (new AbcAppLogin())->giveToken();
+    }
+
+    /**
+     * @return string
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 新农行app登录
+     */
+    public function abcNewAppLogin()
+    {
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['id'], 'require');
+
+        return (new AbcNewAppLogin())->giveToken();
     }
 
     /**

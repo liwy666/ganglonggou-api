@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: administrator_liwy
- * Date: 2019/5/23
- * Time: 9:34
+ * Date: 2019/6/11
+ * Time: 12:42
  */
 
 namespace app\api\service\Login;
@@ -12,18 +12,17 @@ namespace app\api\service\Login;
 use app\api\model\GlUser;
 use app\lib\exception\CommonException;
 
-class TestLogin extends BaseLogin
+class AbcNewAppLogin extends BaseLogin
 {
-    private $testAppId;
+    private $abcAppId;
     private $id;
     private $intoType;
     private $sonIntoType;
-    private $testOpenid;
+    private $abcAppOpenid;
     private $userInfo;
 
     public function __construct()
     {
-        $this->testAppId = request()->param('test_app_appid');
         $this->id = request()->param('id');
         $this->intoType = 'abc';
         $this->sonIntoType = 'abc_app';
@@ -42,9 +41,20 @@ class TestLogin extends BaseLogin
     public function giveToken()
     {
 
-        $token = $this->getTokenByTestAppIdAndId();
+        return $this->getTokenByOpenId();
 
-        return $token;
+    }
+
+
+    /**
+     * 获取openId
+     */
+    private function getOpenId()
+    {
+
+
+        $this->abcAppOpenid = $this->id;
+
     }
 
     /**
@@ -57,23 +67,17 @@ class TestLogin extends BaseLogin
      * @throws \think\exception\PDOException
      * 保存用户信息，返回token
      */
-    private function getTokenByTestAppIdAndId()
+    private function getTokenByOpenId()
     {
-        if ($this->testAppId !== '1CIOOHCD70050101007F00000910CACD') {
-            throw new CommonException(['msg' => '登录信息验证不通过']);
-        }
-        if ($this->id !== 'fc196654571f8ba9a893350cbc40a59fceb615257d436a67') {
-            throw new CommonException(['msg' => '登录信息验证不通过']);
-        }
-        //随便生成一个
-        $this->testOpenid = 'eEcNpqDL37MerJW6rfqJSTdpD683B8s5';
 
-        $this->userInfo = GlUser::where(['test_openid' => $this->testOpenid])->find();
+        $this->getOpenId();
+
+        $this->userInfo = GlUser::where(['abc_app_openid' => $this->abcAppOpenid])->find();
 
         if (!$this->userInfo) {
             //表示新用户
-            $insert_info_array = ['test_openid' => $this->testOpenid];
-            $user_id = self::addUser($insert_info_array,'test');
+            $insert_info_array = ['abc_app_openid' => $this->abcAppOpenid];
+            $user_id = self::addUser($insert_info_array, 'abc_app');
         } else {
             //老用户
             $user_id = $this->userInfo['user_id'];
@@ -86,6 +90,5 @@ class TestLogin extends BaseLogin
         $token = self::saveToCache($result);
 
         return $token;
-
     }
 }
