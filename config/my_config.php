@@ -105,5 +105,9 @@ return [
     'email_port' => $json_array['email_server']['port'],
     /*des*/
     'des_key' => 'P36lrz6fLmHqb3kx',
-    'des_vi' => '65412398'
+    'des_vi' => '65412398',
+    /*收件地址*/
+    'payment_recipient_email_address' => $json_array['payment_recipient_email_address'],
+    'refund_recipient_email_address' => $json_array['refund_recipient_email_address'],
+
 ];

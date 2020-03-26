@@ -11,6 +11,7 @@ namespace app\api\service\Login;
 
 use app\api\model\GlUser;
 use app\lib\exception\CommonException;
+use think\facade\Log;
 
 class AppAliPayLogin extends BaseLogin
 {
@@ -43,6 +44,10 @@ class AppAliPayLogin extends BaseLogin
     public function getToken()
     {
         $ali_pay_user_info = self::getAliPayUserInfoForApp($this->code);
+
+        if (!$ali_pay_user_info['ali_pay_user_id']) {
+            throw new CommonException(['msg' => '获取用户信息失败']);
+        }
 
         $user_info = GlUser::where(['ali_pay_user_id' => $ali_pay_user_info['ali_pay_user_id']])->find();
 

@@ -260,3 +260,18 @@ function objectToArray($object)
     return $array;
 }
 
+function debugLog($label, $value)
+{
+    $debug = config('my_config.debug');
+    if (!$debug) {
+        return false;
+    };
+
+    if (!is_string($value)) {
+        $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
+
+    \think\facade\Log::write("$label:$value", 'debug');
+
+}
+

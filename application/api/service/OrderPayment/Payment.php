@@ -378,13 +378,7 @@ class Payment
 
             if (!config('my_config.debug')) {
                 //正式用
-                $address_array = [
-                    '987303897@qq.com',
-                    '3001374619@qq.com',
-                    '3001397358@qq.com',
-                    '3001306821@qq.com',
-                    '3004391423@qq.com',
-                ];
+                $address_array = config('my_config.payment_recipient_email_address');
             } else {
                 //测试用
                 $address_array = ['987303897@qq.com'];
@@ -415,13 +409,7 @@ class Payment
         $body = '订单退款成功,订单号：' . $this->orderSn;
         if (!config('my_config.debug')) {
             //正式用
-            $address_array = [
-                '987303897@qq.com',
-                '3001374619@qq.com',
-                '3001397358@qq.com',
-                '3001306821@qq.com',
-                '3004391423@qq.com',
-            ];
+            $address_array = config('my_config.refund_recipient_email_address');
         } else {
             //测试用
             $address_array = ['987303897@qq.com'];
