@@ -380,7 +380,6 @@ class Payment
                 //正式用
                 $address_array = [
                     '987303897@qq.com',
-                    '382506262@qq.com',
                     '3001374619@qq.com',
                     '3001397358@qq.com',
                     '3001306821@qq.com',
@@ -418,7 +417,6 @@ class Payment
             //正式用
             $address_array = [
                 '987303897@qq.com',
-                '382506262@qq.com',
                 '3001374619@qq.com',
                 '3001397358@qq.com',
                 '3001306821@qq.com',

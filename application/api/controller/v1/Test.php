@@ -41,7 +41,7 @@ class Test extends Controller
 {
     public function test()
     {
-        return strlen('asdasdas');
+        return $_SERVER;
     }
 
     private function getOrderInfo()
