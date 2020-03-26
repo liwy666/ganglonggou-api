@@ -41,7 +41,7 @@ class Test extends Controller
 {
     public function test()
     {
-        return $_SERVER;
+        return \config('my_config.refund_recipient_email_address');
     }
 
     private function getOrderInfo()

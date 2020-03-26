@@ -236,42 +236,45 @@ class BaseLogin
      */
     public static function getAliPayUserInfoForApp($code)
     {
-        $ali_pay_user_id_cache_name = $code . '_app_ali_pay_user_id';
         $debug = config('my_config.debug');
         $AliPay = new AliPay();
-        $ali_pay_user_id = Cache::get($ali_pay_user_id_cache_name);
-        if ($ali_pay_user_id || $debug) {
-            $oauth_token_result = $AliPay->oauthToken($code);
-            if (!is_array($oauth_token_result) || array_key_exists('error_response', $oauth_token_result)) {
-                Log::write($oauth_token_result, 'error');
-                throw new CommonException(['msg' => 'app获取支付宝access_token信息失败', 'code' => '500']);
-            }
-            //通过code永久缓存user_id
-            Cache::set($ali_pay_user_id_cache_name, $oauth_token_result['alipay_system_oauth_token_response']['user_id'], 0);
-
-            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
-            $user_info = Cache::get($user_info_cache_name);
-            if (!$user_info || $debug) {
-                $user_info_share = $AliPay->userInfoShare($oauth_token_result['alipay_system_oauth_token_response']['access_token']);
-                if (!is_array($user_info_share) || $user_info_share['alipay_user_info_share_response']['code'] !== '10000') {
-                    Log::write($user_info_share, 'error');
-                    throw new CommonException(['msg' => 'app获取支付宝用户信息失败', 'code' => '500']);
-                }
-                //下载图片到本地
-                $user_info['head_img_file'] = (new DownloadImage())->download($user_info_share['alipay_user_info_share_response']['avatar']);
-                //生成用户姓名
-                $user_info['nick_name'] = array_key_exists('nick_name', $user_info_share['alipay_user_info_share_response']) ? $user_info_share['alipay_user_info_share_response']['nick_name'] : 'aliPay' . time();
-                //user_id
-                $user_info['ali_pay_user_id'] = $user_info_share['alipay_user_info_share_response']['user_id'];
-                //通过openid永久缓存用户信息
-                Cache::set($user_info_cache_name, $user_info, 0);
-            }
-
-        } else {
-            $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
-            $user_info = Cache::get($user_info_cache_name);
+        $oauth_token_result = $AliPay->oauthToken($code);
+        if (!is_array($oauth_token_result) || array_key_exists('error_response', $oauth_token_result)) {
+            Log::write($oauth_token_result, 'error');
+            throw new CommonException(['msg' => 'app获取支付宝access_token信息失败', 'code' => '500']);
         }
-
+        /**
+         * $oauth_token_result
+         * {
+         * "alipay_system_oauth_token_response": {
+         * "access_token": "kuaijieB33478b903ee2408ab03e1e5b99b00X40",
+         * "alipay_user_id": "20880050551716885137578560816740",
+         * "expires_in": 1209600,
+         * "re_expires_in": 15552000,
+         * "refresh_token": "kuaijieB3ba44cdbdb9c4d4dbe84a2b54c3e9X40",
+         * "user_id": "2088702746395409"
+         * },
+         * "sign": ""
+         * }*/
+        $ali_pay_user_id = $oauth_token_result['alipay_system_oauth_token_response']['user_id'];
+        $user_info_cache_name = $ali_pay_user_id . '_app_ali_pay_user_info';
+        $user_info = Cache::get($user_info_cache_name);
+        if (!$user_info || $debug) {
+            $user_info_share = $AliPay->userInfoShare($oauth_token_result['alipay_system_oauth_token_response']['access_token']);
+            if (!is_array($user_info_share) || $user_info_share['alipay_user_info_share_response']['code'] !== '10000') {
+                Log::write($user_info_share, 'error');
+                throw new CommonException(['msg' => 'app获取支付宝用户信息失败', 'code' => '500']);
+            }
+            //下载图片到本地
+            $user_info['head_img_file'] = (new DownloadImage())->download($user_info_share['alipay_user_info_share_response']['avatar']);
+            //生成用户姓名
+            $user_info['nick_name'] = array_key_exists('nick_name', $user_info_share['alipay_user_info_share_response']) ? $user_info_share['alipay_user_info_share_response']['nick_name'] : 'aliPay' . time();
+            //user_id
+            $user_info['ali_pay_user_id'] = $user_info_share['alipay_user_info_share_response']['user_id'];
+            //通过openid永久缓存用户信息
+            Cache::set($user_info_cache_name, $user_info, 0);
+        }
+        debugLog('userInfo', $user_info);
 
         return $user_info;
     }
