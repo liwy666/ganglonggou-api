@@ -1,0 +1,15 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body  onload="javascript:document.pay_form.submit();">
+    <form id="pay_form" name="pay_form" action="https://mywap2.icbc.com.cn/ICBCWAPBank/servlet/ICBCWAPEBizServlet" method="post">    <input type="hidden" name="interfaceName" id="interfaceName" value="ICBC_WAPB_B2C" />
+    <input type="hidden" name="interfaceVersion" id="interfaceVersion" value="1.0.0.6" />
+    <input type="hidden" name="tranData" id="tranData" value="tranData" />
+    <input type="hidden" name="merSignMsg" id="merSignMsg" value="merSignMsg" />
+    <input type="hidden" name="merCert" id="merCert" value="merCert" />
+    <input type="hidden" name="clientType" id="clientType" value="clientType" />
+    <input type="submit" value="稍等，支付跳转跳..." style="display: none;" >
+    </form>
+</body>
+</html>

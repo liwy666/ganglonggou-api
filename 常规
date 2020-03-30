@@ -1,0 +1,29 @@
+//验证必要
+ (new CurrencyValidate())->myGoCheck(['page', 'limit'], 'require');
+ //验证正整数
+ (new CurrencyValidate())->myGoCheck(['page', 'limit'], 'positiveInt');
+ //权限
+UserAuthority::checkAuthority(8);
+
+//获取用户信息
+$user_token = request()->param("user_token");
+$user_desc = BaseLogin::getCurrentIdentity(['user_id','into_type','son_into_type'],$user_token);
+$user_id = $user_desc['user_id'];
+$into_type = $user_desc['into_type'];
+$son_into_type = $user_desc['son_into_type'];
+
+//保留两位小数
+sprintf("%01.2f",$price);
+
+//项目目录
+\think\facade\Env::get('root_path');
+//json配置文件目录
+ $json_file = dirname(\think\facade\Env::get('root_path')) . '/config/ganglonggou.json';
+
+//通过入口获取parentId
+  try {
+            $parent_id = config('my_config.parentId_by_intoType')[$into_type];
+        } catch (Exception $e) {
+            throw new CommonException(['msg' => '无此入口']);
+    };
+

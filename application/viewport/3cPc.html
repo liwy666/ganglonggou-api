@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<meta http-equiv=X-UA-Compatible content="IE=edge">
+	<meta name=viewport content="width=device-width,initial-scale=1">
+	<meta name=renderer content=webkit>
+	<title>新品汇</title>
+	<link href=http://mall.icbc.com.cn/styles/base.css rel=stylesheet type=text/css>
+	<link href=http://mall.icbc.com.cn/styles/global.css rel=stylesheet type=text/css>
+	<link href=http://mall.icbc.com.cn/styles/jquery.jqzoom.css rel=stylesheet type=text/css>
+	<link href=http://mall.icbc.com.cn/styles/new_headerFooter.css rel=stylesheet type=text/css>
+	<script>var contextPath = '';
+    var webType = 'jhtml';
+    var realContextPath = 'http://mall.icbc.com.cn';
+    var mallUrl = 'http://mall.icbc.com.cn';
+    var mallDomain = 'mall.icbc.com.cn';
+    var imServerUrl = 'https://im.mall.icbc.com.cn';
+    var searchPageHead = "";</script>
+	<script name=script src=http://mall.icbc.com.cn/scripts/jquery-1.8.3.min.js></script>
+	<script src="http://mall.icbc.com.cn/specHeader.jhtml?callback=specHeader"></script>
+</head>
+
+<style>
+	html {
+		width: 100%;
+	}
+
+	body {
+		width: 100%;
+	}
+
+	* {
+		padding: 0;
+		margin: 0;
+		border: 0;
+	}
+
+	.main-box {
+		width: 100%;
+		background-color: rgb(186, 74, 211);
+		overflow: hidden;
+	}
+
+	.head-box {
+		width: 100%;
+		text-align: center;
+	}
+
+	.head-box img {
+		width: 100%;
+	}
+
+	.head-box .coupon-img {
+		width: 50%;
+	}
+
+	.title-box {
+		width: 100%;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	.title-box img {
+		width: 100%;
+	}
+
+	.goods-box {
+		isplay: flex;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		width: 1002px;
+		margin: 0 auto;
+	}
+
+	.goods-box .goods-cart-box {
+		width: 180px;
+		margin-top: 10px;
+		margin-left: 2%;
+		background-color: white;
+		border-radius: 5px;
+		overflow: hidden;
+		transition: all 0.3s;
+		cursor: pointer;
+	}
+
+	.goods-box .goods-cart-box:hover {
+		box-shadow: 0 30px 20px 10px rgba(0, 0, 0, 0.3);
+		transform: translateY(-10px);
+	}
+
+	.goods-box a {
+		text-decoration: none;
+	}
+
+	.goods-box a:link {
+		text-decoration: none;
+	}
+
+	.goods-box a:hover {
+		text-decoration: none;
+	}
+
+	.goods-box .goods-cart-box .goods-img {
+		width: 100%;
+	}
+
+	.goods-box .goods-cart-box .goods-img img {
+		width: 100%;
+	}
+
+	.goods-box .goods-cart-box .goods-name {
+		border: 0px solid black;
+		position: relative;
+		box-sizing: border-box;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		flex-direction: column;
+		align-content: flex-start;
+		flex-shrink: 0;
+		line-height: 20px;
+		height: 40px;
+		margin-top: 2.208px;
+		margin-bottom: 2.208px;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		font-size: 14px;
+		color: rgb(50, 50, 50);
+		padding-left: 15px;
+		padding-right: 15px;
+		font-weight: bolder;
+		text-align: center;
+	}
+
+	.goods-box .goods-cart-box .goods-price-box {
+		width: 100%;
+		height: 40px;
+		box-sizing: border-box;
+		padding-left: 10px;
+		padding-right: 3px;
+		display: flex;
+		justify-content: flex-start;
+		margin-top: 5px;
+	}
+
+	.goods-box .goods-cart-box .goods-price-box .goods-price {
+		line-height: 15px;
+		font-size: 16px;
+		color: red;
+		font-weight: bolder;
+	}
+
+	.goods-box .goods-cart-box .goods-price-box .goods-price i {
+		font-style: normal;
+		font-size: 10px;
+	}
+
+	.goods-box .goods-cart-box .goods-price-box .goods-price span {
+		font-style: normal;
+		font-weight: bolder;
+		font-size: 10px;
+		color: black;
+	}
+
+	.brand-box {
+		isplay: flex;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		width: 1002px;
+		margin: 0 auto;
+		margin-bottom: 50px;
+	}
+
+	.brand-box div {
+		width: 200px;
+		margin-left: 20px;
+		margin-top: 20px;
+	}
+
+	.brand-box img {
+		width: 100%;
+
+	}
+
+	.top{
+		width: 30%;
+		height: 50px;
+		margin-left: 35%;
+		background-color: white;
+		line-height: 50px;
+		text-align: center;
+		font-size: 18px;
+		border-radius: 5px;
+		box-shadow: 0 0 10px 1px rgba(0,0,0,0.3);
+		margin-bottom: 50px;
+		margin-top: 100px;
+		color: rgb(192,22,183);
+		font-weight: bolder;
+		transition: all 0.3s;
+		cursor: pointer;
+	}
+	.top:hover{
+		transform: translateY(-20px);
+	}
+
+</style>
+
+
+<body>
+<span id=specTop></span>
+<script>
+	var innerHtmlt = decodeURIComponent(specHeader.htmlContent);
+$("#specTop").before(innerHtmlt);
+
+   function scrollToTop() {
+        (function smoothscroll() {
+            var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            if (currentScroll > 0) {
+                window.requestAnimationFrame(smoothscroll);
+                window.scrollTo(0, currentScroll - (currentScroll / 5));
+            }
+        })();
+    }
+
+</script>
+<span id=specContent>
+	<div class="main-box">
+		<div class="head-box"><img src="./images/head.jpg" alt=""></div>
+		<!--↓领券地址，写在href后面，双引号不要删除-->
+		<div class="head-box"><a href="" target="_blank"><img class="coupon-img" src="./images/coupon.jpg"
+															  alt=""></a></div>
+		<!--券享好礼-->
+		<div class="title-box"><img src="./images/title1.jpg" alt=""></div>
+		<div class="goods-box">
+
+		  	<{foreach $goods_list.g1 as $k=>$v}>
+			<div class="goods-cart-box">
+				<a href="<{$v['url']}>" target="_blank">
+					<div class="goods-img"><img src="<{$v['ad_img']}>" alt=""></div>
+					<div class="goods-info-box">
+						<div class="goods-name"><{$v['goods_name']}></div>
+						<div class="goods-price-box">
+							<div class="goods-price"><span>活动价：</span><i>￥</i><{$v['goods_price']}></div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<{/foreach}>
+
+		</div>
+		<div class="title-box"><img src="./images/title2.jpg" alt=""></div>
+
+			<div class="goods-box">
+
+		  	<{foreach $goods_list.g2 as $k=>$v}>
+			<div class="goods-cart-box">
+				<a href="<{$v['url']}>" target="_blank">
+					<div class="goods-img"><img src="<{$v['ad_img']}>" alt=""></div>
+					<div class="goods-info-box">
+						<div class="goods-name"><{$v['goods_name']}></div>
+						<div class="goods-price-box">
+							<div class="goods-price"><span>活动价：</span><i>￥</i><{$v['goods_price']}></div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<{/foreach}>
+
+		</div>
+
+		<div class="title-box"><img src="./images/title3.jpg" alt=""></div>
+
+			<div class="goods-box">
+
+		  	<{foreach $goods_list.g3 as $k=>$v}>
+			<div class="goods-cart-box">
+				<a href="<{$v['url']}>" target="_blank">
+					<div class="goods-img"><img src="<{$v['ad_img']}>" alt=""></div>
+					<div class="goods-info-box">
+						<div class="goods-name"><{$v['goods_name']}></div>
+						<div class="goods-price-box">
+							<div class="goods-price"><span>活动价：</span><i>￥</i><{$v['goods_price']}></div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<{/foreach}>
+		</div>
+		<div class="title-box"><img src="./images/title4.jpg" alt=""></div>
+		<div class="brand-box">
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000130996" target="_blank"><img
+				src="./images/Thinkpad.png" alt=""></a></div>
+			<div><a href="http://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000112442" target="_blank"><img
+				src="./images/三星.png" alt=""></a></div>
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000133330" target="_blank"><img
+				src="./images/华硕.png" alt=""></a></div>
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000121140" target="_blank"><img
+				src="./images/小米.png" alt=""></a></div>
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000113906" target="_blank"><img
+				src="./images/vivo.png" alt=""></a></div>
+			<div><a href="http://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000035551" target="_blank"><img
+				src="./images/OPPO.png" alt=""></a></div>
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000130916" target="_blank"><img
+				src="./images/华为.png" alt=""></a></div>
+			<div><a href="https://mall.icbc.com.cn/shop/showSpecial.jhtml?themeId=9000000000131046" target="_blank"><img
+				src="./images/苹果.png" alt=""></a></div>
+		</div>
+		<div class="top" onclick="scrollToTop()"> ↑ 返回顶部</div>
+	</div>
+</span>
+<style>#utj a {
+	display: none;
+}</style>
+<div id=utj></div>
+</body>
+<script src=http://mall.icbc.com.cn/scripts/specialNew.js></script>
+<script src=http://mall.icbc.com.cn/scripts/topbar.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/utils.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/shopcar.js></script>
+<script src=http://mall.icbc.com.cn/scripts/jqModal.js></script>
+<script src=http://mall.icbc.com.cn/scripts/common.js></script>
+<script src=http://mall.icbc.com.cn/scripts/init.js></script>
+<script src=http://mall.icbc.com.cn/scripts/jcommon.js></script>
+<script src=http://mall.icbc.com.cn/scripts/shopping/ShopCarVO.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/jquery.bgiframe.min.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/jquery.ajaxQueue.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/thickbox-compressed.js></script>
+<script src=http://mall.icbc.com.cn/scripts/js/jquery.autocomplete.min.js></script>
+<script src=http://mall.icbc.com.cn/scripts/search-common.js></script>
+<!--[if IE 6]>
+<script type="text/javascript" src="http://mall.icbc.com.cn/scripts/transF.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$('#cart_f').TransF();
+	});
+</script>
+<![endif]--></html>

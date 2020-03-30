@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>江苏岗隆数码-农行支付页面</title>
+</head>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.cookie.min.js"></script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    html {
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(45deg, #e83051, #f19483);
+    }
+
+    div {
+        text-align: center;
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        font-weight: bolder;
+    }
+</style>
+<body>
+<div>
+    正在响应......
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var success_url = $.cookie('success_url');
+        if (typeof (success_url) === "undefined") {
+            alert("抱歉,获取返回页面失败，请重新打开商城");
+        } else {
+            window.location.href = success_url;
+        }
+    });
+</script>
+</body>
+</html>

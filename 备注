@@ -1,0 +1,19 @@
+##缓存
+1.设置商品信息的缓存
+key:$parent_id . '_user_goods_list'
+2.首页广告信息缓存
+key:$into_type . '_user_ad_index_list'
+3.分类
+key:$parent_id . '_user_cat_list'
+4.分类广告
+key:$into_type.'_user_classify_ad_list'
+5.文章
+key:$article_id.'_article'
+##响应码
+['msg' => '获取用户信息失败', 'code' => '400', 'error_code' => 10002]
+/.idea
+/.vscode
+/public/download
+*.log
+.env
+.DS_Store

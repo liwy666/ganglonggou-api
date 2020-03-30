@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>江苏岗隆数码-农行支付页面</title>
+</head>
+<link rel="stylesheet" href="/static/css/ganglonggou_api.css">
+<link rel="stylesheet" href="/static/css/animate.min.css">
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.cookie.min.js"></script>
+<script src="/static/js/lib-flexible.js"></script>
+<body>
+<div class="load-box">感谢您选择岗隆数码，正在为您拉起微信支付页面</div>
+<div class="main">
+    <div class="head-box">
+        <div class="head-main">
+            <p class="head-main-desc"><span>江苏岗隆数码--您身边的数码产品服务商</span></p>
+            <P class="head-main-price"><span>￥</span><{$order_info.order_price}></P>
+        </div>
+    </div>
+    <div class="lower-box animated bounceIn fadeInUp">
+        <span></span>
+        <div class="goods-list-box">
+            <{foreach $order_info.goods_list as $k=>$v}>
+            <div class="one-goods">
+                <div class="d"></div>
+                <div class="goods-name"><{$v['goods_name']}></div>
+            </div>
+            <{/foreach}>
+        </div>
+        <div class="button-box">
+            <div class="button" style="background-image: linear-gradient(45deg,rgb(215,84,85),rgb(232,48,21));"
+                 onclick="callpay()">立即支付
+            </div>
+            <div class="button" onclick="blank()">返回上级页面</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //调用微信JS api 支付
+    function jsApiCall() {
+        let js_api_parameters = JSON.parse(<{$order_info.js_api_parameters|raw}>);
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            js_api_parameters,
+            function (res) {
+                if (res.err_msg == 'get_brand_wcpay_request:ok') {
+                    window.location.href = '<{$order_info.success_url|raw}>';
+                }
+            }
+        );
+    }
+
+    function callpay() {
+        if (typeof WeixinJSBridge == "undefined") {
+            if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+            } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+            }
+        } else {
+            jsApiCall();
+        }
+    }
+
+    function blank() {
+        window.location.href = '<{$order_info.bank_url}>';
+    }
+
+    $(function () {
+        $.cookie('success_url', '<{$order_info.success_url|raw}>', {expires: 0.5, path: '/'});
+    });
+</script>
+</body>
+</html>
