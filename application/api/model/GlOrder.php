@@ -81,6 +81,11 @@ class GlOrder extends BaseModel
         }
     }
 
+    public function glMidOrder()
+    {
+        return $this->hasMany('GlMidOrder', 'order_sn', 'order_sn');
+    }
+
     public static function getOrderInfoByOrderSn($order_sn)
     {
         $result = self::where([['order_sn', '=', $order_sn]])
@@ -88,6 +93,7 @@ class GlOrder extends BaseModel
 
         return $result;
     }
+
 
     public static function getScreenOrderInfoByOrderSnAndUserId($order_sn, $user_id)
     {
@@ -104,6 +110,31 @@ class GlOrder extends BaseModel
             $order_info['logistics_code_name'] = config('my_config.logistics_code_name')[$order_info['logistics_code']];
         }
         return $order_info;
+
+    }
+
+    public static function adminGetOrderList($where, $page, $limit)
+    {
+        $result['list'] = self::join('gl_mid_order mo', 'gl_order.order_sn = mo.order_sn')
+            ->join('gl_goods g', 'mo.goods_id = g.goods_id')
+            ->join('gl_category c', 'g.cat_id = c.cat_id')
+            ->where($where)
+            ->page($page, $limit)
+            ->order('gl_order.create_time desc')
+            ->field('gl_order.order_sn,gl_order.order_state,gl_order.create_time,gl_order.pay_time,
+                            gl_order.pay_name,gl_order.bystages_val,gl_order.original_order_price,gl_order.after_using_coupon_price,
+                            gl_order.order_price,gl_order.logistics_name,gl_order.logistics_tel,gl_order.logistics_address,
+                            c.cat_name,gl_order.son_into_type_name,mo.goods_name')
+            ->select();
+
+        $result['count'] = self::join('gl_mid_order mo', 'gl_order.order_sn = mo.order_sn')
+            ->join('gl_goods g', 'mo.goods_id = g.goods_id')
+            ->join('gl_category c', 'g.cat_id = c.cat_id')
+            ->where($where)
+            ->count();
+
+        return $result;
+
 
     }
 }

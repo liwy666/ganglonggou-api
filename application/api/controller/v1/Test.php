@@ -9,6 +9,7 @@
 namespace app\api\controller\v1;
 
 
+use app\api\controller\v1\cms\CmsOrder;
 use app\api\controller\v1\common\Index;
 use app\api\model\GlAfterSale;
 use app\api\model\GlArticleSignUser;
@@ -41,7 +42,7 @@ class Test extends Controller
 {
     public function test()
     {
-        return \config('my_config.refund_recipient_email_address');
+       return \config('my_config.payment_recipient_email_address');
     }
 
     private function getOrderInfo()

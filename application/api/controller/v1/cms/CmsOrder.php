@@ -21,10 +21,7 @@ class CmsOrder
 {
     /**
      * @return mixed
-     * @throws \app\lib\exception\CommonException
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws CommonException
      * 分页获取订单
      */
     public function giveOrderListByPage()
@@ -36,13 +33,16 @@ class CmsOrder
         UserAuthority::checkAuthority(8);
         $data['page'] = request()->param('page');
         $data['limit'] = request()->param('limit');
-        $where = [['is_del', '=', 0]];
+        $where = [['gl_order.is_del', '=', 0]];
+        /*订单号*/
         if (request()->param('order_sn') !== '') {
             array_push($where, ['order_sn', 'like', '%' . request()->param('order_sn') . '%']);
         }
+        /*收件人*/
         if (request()->param('logistics_address_name') !== '') {
             array_push($where, ['logistics_name', 'like', '%' . request()->param('logistics_address_name') . '%']);
         }
+        /*手机号*/
         if (request()->param('logistics_address_phone') !== '') {
             array_push($where, ['logistics_tel', 'like', '%' . request()->param('logistics_address_phone') . '%']);
         }
@@ -72,35 +72,24 @@ class CmsOrder
 
         }
         /*订单入口*/
-
         if (request()->param('son_into_type') !== 'all') {
-            /*{value: 'all', label: '所有入口'},
-           {value: 'wx', label: '微信入口'},
-           {value: 'abc', label: '农行入口'},
-           {value: 'ios', label: 'ios客户端'},
-           {value: 'android', label: 'android客户端'},
-           {value: 'pc', label: 'pc端'},*/
             array_push($where, ['son_into_type', '=', request()->param('son_into_type')]);
 
         }
-        $result['list'] = GlOrder::where($where)
-            ->page($data['page'], $data['limit'])
-            ->order('create_time desc')
-            ->select();
+        /*分类*/
+        if (request()->param('cat_id') !== 0 && request()->param('cat_id')) {
+            array_push($where, ['g.cat_id', '=', request()->param('cat_id')]);
+        }
 
-        $result['count'] = GlOrder::where($where)
-            ->count();
 
-        return $result;
+        return GlOrder::adminGetOrderList($where, $data['page'], $data['limit']);
+
 
     }
 
     /**
      * @return mixed
-     * @throws \app\lib\exception\CommonException
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws CommonException
      * 导出订单
      */
     public function importOrderList()
@@ -112,11 +101,11 @@ class CmsOrder
 
 
         UserAuthority::checkAuthority(8);
-        $where = [['is_del', '=', 0]];
+        $where = [['gl_order.is_del', '=', 0]];
 
         /*下单时间*/
-        array_push($where, ['create_time', '>=', request()->param('start_time')]);
-        array_push($where, ['create_time', '<=', request()->param('end_time')]);
+        array_push($where, ['gl_order.create_time', '>=', request()->param('start_time')]);
+        array_push($where, ['gl_order.create_time', '<=', request()->param('end_time')]);
 
         /*订单状态*/
         if (request()->param('order_state') !== 'all') {
@@ -135,19 +124,19 @@ class CmsOrder
                     break;
 
             }
-
         }
         /*订单入口*/
         if (request()->param('son_into_type') !== 'all') {
             array_push($where, ['son_into_type', '=', request()->param('son_into_type')]);
 
         }
+        /*分类*/
+        if (request()->param('cat_id') !== 0 && request()->param('cat_id')) {
+            array_push($where, ['g.cat_id', '=', request()->param('cat_id')]);
+        }
 
-        $result['list'] = GlOrder::where($where)
-            ->order('create_time desc')
-            ->select();
+        return GlOrder::adminGetOrderList($where, 1, 1000);
 
-        return $result;
 
     }
 
