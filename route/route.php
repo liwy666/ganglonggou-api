@@ -251,6 +251,7 @@ Route::post('api/:version/test_login$', 'api/:version.common.Login/testLogin');
 Route::post('api/:version/abc_wx_login$', 'api/:version.common.Login/abcWxLogin');
 Route::post('api/:version/abc_app_login$', 'api/:version.common.Login/abcAppLogin');
 Route::post('api/:version/abc_new_app_login$', 'api/:version.common.Login/abcNewAppLogin');
+Route::post('api/:version/abc_tourist_login$', 'api/:version.common.Login/abcTouristLogin');
 Route::post('api/:version/wx_login$', 'api/:version.common.Login/wxLogin');
 Route::post('api/:version/user_login_count$', 'api/:version.common.Login/loginCount');
 Route::post('api/:version/mobile_user_login$', 'api/:version.common.Login/mobileLogin');
@@ -297,8 +298,8 @@ Route::post('api/:version/cms/create_share_url$', 'api/:version.article_sign.Cms
 //添加反馈信息
 Route::post('api/:version/add_feed_back$', 'api/:version.FeedBack/addFeedBack');
 //查看反馈信息
-Route::get('api/:version/cms/feed_back$','api/:version.FeedBack/mainFeedBack');
+Route::get('api/:version/cms/feed_back$', 'api/:version.FeedBack/mainFeedBack');
 //处理反馈信息
-Route::post('api/:version/cms/handle_feed_back$','api/:version.FeedBack/handleFeedBack');
+Route::post('api/:version/cms/handle_feed_back$', 'api/:version.FeedBack/handleFeedBack');
 //删除反馈信息
-Route::post('api/:version/cms/del_feed_back$','api/:version.FeedBack/delFeedBack');
+Route::post('api/:version/cms/del_feed_back$', 'api/:version.FeedBack/delFeedBack');

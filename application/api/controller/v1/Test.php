@@ -30,6 +30,7 @@ use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
 use app\api\service\SerAfterSale;
 use app\api\service\SerEmail;
+use app\api\service\Upload\Upload;
 use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
 use EasyWeChat\Factory;
@@ -37,11 +38,15 @@ use Naixiaoxin\ThinkWechat\Facade;
 use Noodlehaus\Config;
 use think\Controller;
 use think\Db;
+use think\facade\Cache;
+use think\Image;
+
 
 class Test extends Controller
 {
     public function test()
     {
+
        return true;
     }
 

@@ -32,15 +32,13 @@ class Upload extends Controller
         $info = $file->validate(['size' => $size, 'ext' => $ext])->move(config('my_config.img_file'));
         if (!$info) throw new CommonException(['msg' => '上传图片失败:' . $file->getError()]);
         $file_name = str_replace("\\", "/", $info->getSaveName());
-        //$file_name_ =$info->getSaveName();
         //压缩图片
-        $image = Image::open($file);
+        $image = Image::open($info);
         $h = $image->height();
         $w = $image->width();
-        //$image->thumb($w, $h)->save(config('my_config.img_file').'thumb'.$file_name);
-        $image->thumb($w + 0, $h + 0)->save(config('my_config.img_file') . $file_name);
-        // $result['goods_img'] = config('my_config.img_url').'compress/'.$file_name;
-        $result['goods_img'] = config('my_config.img_url') . $file_name;
+        $thumbName = $this->_thumbImageName($file_name);
+        $image->thumb($w + 0, $h + 0)->save(config('my_config.img_file') . $thumbName);
+        $result['goods_img'] = config('my_config.img_url') . $thumbName;
         $result['name'] = config('my_config.img_url') . $file_name;
         $result['original_img'] = config('my_config.img_url') . $file_name;
         return $result;
@@ -63,5 +61,10 @@ class Upload extends Controller
         $result['download_path'] = config('my_config.api_url') . 'download/' . $file_name;
         $result['file_size'] = $file->getSize();
         return $result;
+    }
+
+    private function _thumbImageName($imageName)
+    {
+        return str_replace('/', '/thumb_', $imageName);
     }
 }
