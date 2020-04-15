@@ -29,8 +29,8 @@ class TimedTask
         $PayClass = new Payment();
         foreach ($orderList as $key => $value) {
             $PayClass->orderSn = $value['order_sn'];
-            //$PayClass->orderPayQuery();
+            $PayClass->orderPayQuery();
         }
-        return $orderList;
+        return true;
     }
 }
