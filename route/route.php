@@ -285,6 +285,7 @@ Route::post('api/:version/send_register_email_verify_code$', 'api/:version.commo
 /*定时任务*/
 //定时查看订单支付情况
 Route::post('api/:version/timing_check_order_payment_state$', 'api/:version.TimedTask/timingCheckOrderPaymentState');
+Route::post('api/:version/check_order_payment_state$', 'api/:version.TimedTask/checkOrderPaymentState');
 
 /*阅读打卡*/
 //获取用户信息
