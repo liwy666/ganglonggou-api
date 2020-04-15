@@ -110,6 +110,7 @@ Route::get('api/:version/cms/cms_get_extra_order_info$', 'api/:version.cms.CmsOr
 Route::get('api/:version/cms/cms_pay_query$', 'api/:version.cms.CmsOrder/OrderPaymentQuery');
 Route::post('api/:version/cms/cms_call_order$', 'api/:version.cms.CmsOrder/callOrderByOrderSn');
 Route::post('api/:version/cms/cms_del_order$', 'api/:version.cms.CmsOrder/delOrderByOrderSn');
+Route::post('api/:version/cms/cms_change_order_state_after_sale$', 'api/:version.cms.CmsOrder/changeOrderStateAfterSale');
 //物流
 Route::post('api/:version/cms/cms_upd_logistics$', 'api/:version.cms.CmsOrder/updOrderLogisticsInfoByOrderSn');
 Route::post('api/:version/cms/cms_delivery_order$', 'api/:version.cms.CmsOrder/deliveryByOrderSn');
@@ -281,6 +282,9 @@ Route::post('api/:version/register_by_email$', 'api/:version.common.Register/reg
 //注册邮箱发送验证码
 Route::post('api/:version/send_register_email_verify_code$', 'api/:version.common.Register/sendRegisterEmailVerifyCode');
 
+/*定时任务*/
+//定时查看订单支付情况
+Route::post('api/:version/timing_check_order_payment_state$', 'api/:version.TimedTask/timingCheckOrderPaymentState');
 
 /*阅读打卡*/
 //获取用户信息

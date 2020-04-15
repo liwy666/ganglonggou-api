@@ -125,6 +125,10 @@ class GlOrder extends BaseModel
             ->where($where)
             ->page($page, $limit)
             ->order('gl_order.create_time desc')
+            ->field('gl_order.order_sn,gl_order.order_state,gl_order.create_time,gl_order.pay_time,
+                            gl_order.pay_name,gl_order.bystages_val,gl_order.original_order_price,gl_order.after_using_coupon_price,
+                            gl_order.order_price,gl_order.logistics_name,gl_order.logistics_tel,gl_order.logistics_address,
+                            c.cat_name,gl_order.son_into_type_name,mo.goods_name')
             ->select();
 
         $result['count'] = self::join('gl_mid_order mo', 'gl_order.order_sn = mo.order_sn')

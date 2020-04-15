@@ -64,7 +64,6 @@ class SerAfterSale
                 'is_del' => 0,
                 'after_sale_text' => $this->afterSaleText,
             ]);
-
             /*改变订单状态*/
             GlOrder::where([
                 ['order_sn', '=', $this->orderSn]

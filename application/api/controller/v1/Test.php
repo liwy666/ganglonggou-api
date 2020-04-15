@@ -46,8 +46,7 @@ class Test extends Controller
 {
     public function test()
     {
-
-       return true;
+        return true;
     }
 
     private function getOrderInfo()

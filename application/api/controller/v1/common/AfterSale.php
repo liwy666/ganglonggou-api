@@ -55,8 +55,6 @@ class AfterSale
         $AfterSaleClass->afterSaleCause = $after_sale_cause;
 
         return $AfterSaleClass->userSubmitAfterSale();
-
-
     }
 
     /**

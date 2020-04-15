@@ -44,9 +44,9 @@ class Index
 
         $result['ad_list'] = GlIndexAd::giveIndexAdListByIntoType($into_type);
 
-        $result['cat_list'] = GlCategory::giveCatListByParentId($parent_id);
+        $result['cat_list'] = $parent_id === -1 ? null : GlCategory::giveCatListByParentId($parent_id);
 
-        $result['goods_list'] = GlGoods::giveGoodsListByParentId($parent_id);
+        $result['goods_list'] = $parent_id === -1 ? null : GlGoods::giveGoodsListByParentId($parent_id);
 
         /*流量统计*/
         $into_date = date("Y/m/d");

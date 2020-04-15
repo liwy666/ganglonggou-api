@@ -13,9 +13,11 @@ use app\api\model\GlMidOrder;
 use app\api\model\GlOrder;
 use app\api\model\GlOrderInvoice;
 use app\api\service\OrderPayment\Payment;
+use app\api\service\SerAfterSale;
 use app\api\service\UserAuthority;
 use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
+use MongoDB\Driver\Exception\CommandException;
 
 class CmsOrder
 {
@@ -362,6 +364,43 @@ class CmsOrder
 
         return true;
 
+
+    }
+
+    /**
+     * @return bool
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 修改订单状态为售后
+     */
+    public function changeOrderStateAfterSale()
+    {
+        (new CurrencyValidate())->myGoCheck(['order_sn'], 'require');
+        //UserAuthority::checkAuthority(8);
+        $order_sn = request()->param('order_sn');
+
+        //获取订单信息
+        $orderInfo = GlOrder::where([
+            ['order_sn', '=', $order_sn],
+            ['is_del', '=', 0]
+        ])->find();
+
+        //if (!$orderInfo) throw new CommonException(['msg' => "无此订单"]);
+
+        $AfterSaleClass = new SerAfterSale();
+        $AfterSaleClass->userId = $orderInfo->user_id;
+        $AfterSaleClass->orderSn = $orderInfo->order_sn;
+
+        //备注
+        $AfterSaleClass->afterSaleText = "商家后台手动申请售后";
+        //售后类型
+        $AfterSaleClass->afterSaleType = "全额退款";
+        //售后原因
+        $AfterSaleClass->afterSaleCause = "其他";
+
+        return $AfterSaleClass->userSubmitAfterSale();
 
     }
 }
