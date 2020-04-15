@@ -214,7 +214,7 @@ class AbcPayment
     public function startQuery($order_info)
     {
 
-        require($this->file . 'QueryOrderRequest.php');
+        require_once($this->file . 'QueryOrderRequest.php');
         //require($this->file . 'core/Json.php');
 
         $tRequest = new \QueryOrderRequest();
