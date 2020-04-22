@@ -49,25 +49,7 @@ class Index
         $result['goods_list'] = $parent_id === -1 ? null : GlGoods::giveGoodsListByParentId($parent_id);
 
         /*流量统计*/
-        $into_date = date("Y/m/d");
-
-        if (GlIntoCount::where([
-            ['into_type', '=', $into_type],
-            ['into_date', '=', $into_date]
-        ])->find()
-        ) {
-            GlIntoCount::where([
-                ['into_type', '=', $into_type],
-                ['into_date', '=', $into_date]
-            ])->setInc('into_count');
-        } else {
-            GlIntoCount::create([
-                'into_type' => $into_type,
-                'into_date' => $into_date,
-                'into_count' => 1,
-            ]);
-        }
-
+        $this->_intoCount($into_type);
         return $result;
 
     }
@@ -91,5 +73,59 @@ class Index
             ->setInc('click_count');
 
         return true;
+    }
+
+    /**
+     * @throws CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 首页进入统计
+     */
+    public function anyIntoCount()
+    {
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['into_type'], 'require');
+        $into_type = request()->param('into_type');
+        try {
+            $parent_id = config('my_config.parentId_by_intoType')[$into_type];
+        } catch (Exception $e) {
+            throw new CommonException(['msg' => '无此入口']);
+        };
+
+        $this->_intoCount($into_type);
+
+        return true;
+    }
+
+    /**
+     * @param $into_type
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 首页进入统计
+     */
+    private function _intoCount($into_type)
+    {
+        $into_date = date("Y/m/d");
+
+        if (GlIntoCount::where([
+            ['into_type', '=', $into_type],
+            ['into_date', '=', $into_date]
+        ])->find()
+        ) {
+            GlIntoCount::where([
+                ['into_type', '=', $into_type],
+                ['into_date', '=', $into_date]
+            ])->setInc('into_count');
+        } else {
+            GlIntoCount::create([
+                'into_type' => $into_type,
+                'into_date' => $into_date,
+                'into_count' => 1,
+            ]);
+        }
     }
 }

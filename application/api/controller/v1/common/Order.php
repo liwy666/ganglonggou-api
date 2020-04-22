@@ -65,7 +65,7 @@ class Order
             ['user_id', '=', $user_id],
             ['is_del', '=', 0],
             ['order_state', '=', 1],
-            ['invalid_pay_time', '<=', time()]
+            ['invalid_pay_time', '<', time()]
         ])
             ->update([
                 'upd_time' => time(),
@@ -159,7 +159,7 @@ class Order
         ])->update([
             'order_state' => 4,
             'upd_time' => time(),
-            'invalid_sign_goods_time' => time(),
+            'sign_goods_time' => time(),
             'prev_order_state' => 3,
         ]);
 

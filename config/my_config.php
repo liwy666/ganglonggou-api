@@ -83,6 +83,8 @@ return [
     /*入口对应parent_id*/
     'parentId_by_intoType' => array(
         'abc' => 154,
+        'abc_wuxi' => -1,
+        'abc_yancheng' => -1,
         'wx' => 168,
         '3c618mobile' => -1,
         '3c618pc' => -1,

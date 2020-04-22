@@ -175,7 +175,9 @@ Route::post('api/:version/goods_make/add_make_order$', 'api/:version.goods_make.
 Route::get('api/:version/get_WxJsSdk$', 'api/:version.WxShare/giveWxShareInfo');
 //获取首页信息
 Route::get('api/:version/get_index_info$', 'api/:version.common.Index/giveIndexInfo');
-//获取首页信息
+//首页进入统计
+Route::post('api/:version/any_into_count', 'api/:version.common.Index/anyIntoCount');
+//广告位点击统计
 Route::post('api/:version/ad_item_count$', 'api/:version.common.Index/countIndexAdItem');
 //获取商品列表
 Route::get('api/:version/user_get_goods_list$', 'api/:version.common.Goods/giveGoodsList');
@@ -284,8 +286,10 @@ Route::post('api/:version/send_register_email_verify_code$', 'api/:version.commo
 
 /*定时任务*/
 //定时查看订单支付情况
-Route::post('api/:version/timing_check_order_payment_state$', 'api/:version.TimedTask/timingCheckOrderPaymentState');
+Route::get('api/:version/timing_check_order_payment_state$', 'api/:version.TimedTask/timingCheckOrderPaymentState');
 Route::post('api/:version/check_order_payment_state$', 'api/:version.TimedTask/checkOrderPaymentState');
+//常规定时任务
+Route::get('api/:version/common_timed_task$', 'api/:version.TimedTask/commonTimedTask');
 
 /*阅读打卡*/
 //获取用户信息

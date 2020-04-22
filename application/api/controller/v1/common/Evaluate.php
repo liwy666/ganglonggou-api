@@ -52,12 +52,7 @@ class Evaluate
         }
 
         $EvaluateClass = new SerEvaluate();
-        $EvaluateClass->midOrderId = $id;
-        $EvaluateClass->userId = $user_id;
-        $EvaluateClass->evaluateText = $evaluate_text;
-        $EvaluateClass->rate = $rate;
-
-        return $EvaluateClass->userInsEvaluate();
+        return $EvaluateClass->userInsEvaluate($evaluate_text, $user_id, $id, $rate, 0, 0, time());
 
     }
 
@@ -79,6 +74,8 @@ class Evaluate
         ])
             ->page($page, $limit)
             ->field('create_time,parent_id,user_name,user_img,goods_name,sku_desc,rate,evaluate_text,id')
+            ->order('evaluate_text')
+            ->order('create_time desc')
             ->select();
 
         return $result;

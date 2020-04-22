@@ -247,10 +247,6 @@ class AbcPayment
                         $PaymentClass->OrderPaySuccess($third_party_sn_array);
                     }
                     //更新订单支付时间
-                    Log::write('农行支付查询返回信息(订单号：' . $order_info['order_sn'] .
-                        'OrderDate：' . $detail->GetValue("OrderDate") .
-                        'OrderTime：' . $detail->GetValue("OrderTime") .
-                        ')', 'debug');
                     $result["msg"] = "该订单已经支付";
                     $result["success"] = true;
                     $result["status"] = $Status;

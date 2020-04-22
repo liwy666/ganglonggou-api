@@ -18,6 +18,7 @@ use app\api\model\GlGoods;
 use app\api\model\GlGoodsSku;
 use app\api\model\GlIndexAd;
 use app\api\model\GlIntoCount;
+use app\api\model\GlMidOrder;
 use app\api\model\GlOrder;
 use app\api\model\GlSearchLog;
 use app\api\model\Test1;
@@ -30,6 +31,7 @@ use app\api\service\OrderPayment\IcbcTest;
 use app\api\service\OrderPayment\PcAliPayment;
 use app\api\service\SerAfterSale;
 use app\api\service\SerEmail;
+use app\api\service\SerEvaluate;
 use app\api\service\Upload\Upload;
 use app\api\validate\CurrencyValidate;
 use app\lib\exception\CommonException;
@@ -38,7 +40,9 @@ use Naixiaoxin\ThinkWechat\Facade;
 use Noodlehaus\Config;
 use think\Controller;
 use think\Db;
+use think\Exception;
 use think\facade\Cache;
+use think\facade\Log;
 use think\Image;
 
 
@@ -46,6 +50,32 @@ class Test extends Controller
 {
     public function test()
     {
+
+        if (!\config('my_config.debug')) return true;
+        //自动评价测试
+        $EvaluateClass = new SerEvaluate();
+        GlOrder::where(['order_visible_note' => '超出签收时间，订单自动签收'])
+            ->field('order_sn,user_id,deliver_goods_time')
+            ->chunk(100, function ($orderList) use ($EvaluateClass) {
+                foreach ($orderList as $key => $value) {
+                    $value = $value->toArray();
+                    $orderSn = $value['order_sn'];
+                    $userId = $value['user_id'];
+                    $time = strtotime($value['deliver_goods_time']) + \config('my_config.invalid_sign_goods_time');
+                    //找出中间表
+                    $midOrder = GlMidOrder::where(['order_sn' => $orderSn, 'is_evaluate' => 0])
+                        ->field('id,goods_id')
+                        ->find();
+                    if ($midOrder) {
+                        try {
+                            //开始评价商品
+                            $EvaluateClass->userInsEvaluate('该用户没有填写评价。', $userId, $midOrder['id'], 5, 1, $midOrder['goods_id'], $time);
+                        } catch (Exception $exception) {
+                            continue;
+                        }
+                    }
+                }
+            }, 'order_sn');
         return true;
     }
 
