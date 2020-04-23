@@ -32,4 +32,6 @@ class UserAuthority extends BaseLogin
             return $admin_desc["admin_id"];
         }
     }
+
+
 }

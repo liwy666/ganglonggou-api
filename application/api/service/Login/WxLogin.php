@@ -45,34 +45,36 @@ class WxLogin extends BaseLogin
         $this->appId = config('my_config.wx_app_id');
         $this->secret = config('my_config.wx_secret');
 
-        $this->wxOpenid = Cache::get($this->code . '_user_wx_openid');
-
-        if (!$this->wxOpenid) {
-            $url = "https://api.weixin.qq.com/sns/oauth2/access_token?"
-                . "appid=" . $this->appId
-                . "&secret=" . $this->secret
-                . "&code=" . $this->code
-                . "&grant_type=authorization_code";
-            $curl = curl_init(); // 启动一个CURL会话
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
-            $tmpInfo = curl_exec($curl);     //返回api的json对象		    //关闭URL请求
-            curl_close($curl);
-
-            $getInfo = json_decode($tmpInfo, true);
-
-            if (!is_array($getInfo) || !array_key_exists('openid', $getInfo)) {
-                Log::write($getInfo, 'error');
-                throw new CommonException(['msg' => '获取用户信息失败', 'code' => '400', 'error_code' => 10002]);
-            }
-            //Log::write($getInfo, 'error');
-            $this->wxOpenid = $getInfo['openid'];
-            //永久缓存openid
-            Cache::set($this->code . '_user_wx_openid', $getInfo['openid'], 0);
+        $wxOpenid = Cache::get($this->code . '_user_wx_openid');
+        //在这里判断次code是否已经使用
+        if ($wxOpenid) {
+            Log::write("用户使用重复code:$this->code", 'log');
+            throw new CommonException(['msg' => '公众号登录异常，请尝试重新登录', 'error_code' => 10006]);
         }
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?"
+            . "appid=" . $this->appId
+            . "&secret=" . $this->secret
+            . "&code=" . $this->code
+            . "&grant_type=authorization_code";
+        $curl = curl_init(); // 启动一个CURL会话
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+        $tmpInfo = curl_exec($curl);     //返回api的json对象
+        curl_close($curl);  //关闭URL请求
+
+        $getInfo = json_decode($tmpInfo, true);
+
+        if (!is_array($getInfo) || !array_key_exists('openid', $getInfo)) {
+            Log::write($getInfo, 'error');
+            throw new CommonException(['msg' => '获取用户信息失败', 'code' => '400', 'error_code' => 10007]);
+        }
+        //Log::write($getInfo, 'error');
+        $this->wxOpenid = $getInfo['openid'];
+        //永久缓存openid
+        Cache::set($this->code . '_user_wx_openid', $getInfo['openid'], 0);
     }
 
     /**
