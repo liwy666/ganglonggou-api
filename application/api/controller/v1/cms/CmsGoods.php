@@ -45,8 +45,6 @@ class CmsGoods
         if (request()->param('cat_id') !== '') {
             array_push($where, ['cat_id', '=', request()->param('cat_id')]);
         }
-        /*        $where['goods_name'] = request()->param('goods_name') !== '' ? request()->param('goods_name') : array('exp', Db::raw('is not null'));
-                $where['cat_id'] = request()->param('cat_id') !== '' ? request()->param('cat_id') : array('exp', Db::raw('is not null'));*/
         $result['list'] = GlGoods::where($where)
             ->page($data['page'], $data['limit'])
             ->order('goods_id desc')
@@ -312,9 +310,9 @@ class CmsGoods
         //验证必要
         (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_name', 'promote_number', 'promote_start_date'
             , 'promote_end_date', 'goods_img', 'original_img', 'is_on_sale', 'click_type'
-            , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array', 'goods_id','sort_order'], 'require');
+            , 'is_best', 'is_new', 'is_hot', 'is_promote', 'goods_sales_volume', 'evaluate_count', 'attribute', 'goods_gallery', 'goods_sku_array', 'goods_id', 'sort_order'], 'require');
         //验证正整数
-        (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_id', 'supplier_id','sort_order'], 'positiveInt');
+        (new CurrencyValidate())->myGoCheck(['cat_id', 'goods_id', 'supplier_id', 'sort_order'], 'positiveInt');
 
         UserAuthority::checkAuthority(8);
 

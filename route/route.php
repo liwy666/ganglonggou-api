@@ -64,6 +64,7 @@ Route::post('api/:version/cms/cms_allow_sale_goods$', 'api/:version.cms.CmsGoods
 Route::post('api/:version/cms/cms_batch_upd_goods_head_name$', 'api/:version.cms.CmsGoods/updGoodsNameHeadName');
 //批量修改商品头
 Route::post('api/:version/cms/cms_copy_goods_by_parent_id$', 'api/:version.cms.CmsGoods/copyGoodsByParentId');
+/*分类管理*/
 //获取分类
 Route::get('api/:version/cms/cms_get_cat_list$', 'api/:version.cms.CmsCat/giveAllCat');
 //获取分类列表
@@ -74,6 +75,8 @@ Route::post('api/:version/cms/cms_add_cat$', 'api/:version.cms.CmsCat/addCat');
 Route::post('api/:version/cms/cms_upd_cat$', 'api/:version.cms.CmsCat/updCat');
 //删除分类
 Route::post('api/:version/cms/cms_del_cat$', 'api/:version.cms.CmsCat/delCat');
+//转移分类下商品
+Route::post('api/:version/cms/shear_goods_by_catid', 'api/:version.cms.CmsCat/shearGoodsByCatId');
 //图片上传
 Route::post('api/:version/cms/cms_upload_goods_img$', 'api/:version.upload.Upload/ImgUpload');
 Route::rule('api/:version/cms/cms_upload_goods_img$', 'api/:version.Option/returnTrue', 'OPTIONS');
@@ -102,6 +105,7 @@ Route::get('api/:version/cms/cms_get_coupon_list$', 'api/:version.cms.CmsCoupon/
 Route::post('api/:version/cms/cms_add_coupon$', 'api/:version.cms.CmsCoupon/addCoupon');
 Route::post('api/:version/cms/cms_upd_coupon$', 'api/:version.cms.CmsCoupon/updCoupon');
 Route::post('api/:version/cms/cms_del_coupon$', 'api/:version.cms.CmsCoupon/delCoupon');
+Route::get('api/:version/cms/get_coupon_info$', 'api/:version.cms.CmsCoupon/getCouponInfo');
 //订单
 Route::get('api/:version/cms/cms_get_order_list$', 'api/:version.cms.CmsOrder/giveOrderListByPage');
 Route::get('api/:version/cms/cms_import_order_list$', 'api/:version.cms.CmsOrder/importOrderList');
@@ -158,6 +162,11 @@ Route::post('api/:version/cms/cms_upload_app$', 'api/:version.AppVersion/uploadA
 Route::rule('api/:version/cms/cms_upload_app$', 'api/:version.Option/returnTrue', 'OPTIONS');
 Route::post('api/:version/cms/cms_add_new_version_app$', 'api/:version.AppVersion/addNewVersionApp');
 Route::get('api/:version/cms/cms_get_app_version_info$', 'api/:version.AppVersion/getAppVersion');
+/*菜单管理*/
+//获取菜单列表
+Route::get('api/:version/cms/get_menus_list$', 'api/:version.cms.CmsMenus/getMenusList');
+//添加菜单
+Route::post('api/:version/cms/add_menu$', 'api/:version.cms.CmsMenus/addMenu');
 
 /*goods_make*/
 //获取首页信息

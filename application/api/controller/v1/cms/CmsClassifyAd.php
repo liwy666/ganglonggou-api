@@ -29,12 +29,14 @@ class CmsClassifyAd
         //验证必要
         (new CurrencyValidate())->myGoCheck(['into_type', 'page', 'limit'], 'require');
         UserAuthority::checkAuthority(8);
-        $where['into_type'] = request()->param('into_type');
+        $where['gl_classify_ad.into_type'] = request()->param('into_type');
         $data['page'] = request()->param('page');
         $data['limit'] = request()->param('limit');
-        $result['list'] = GlClassifyAd::where($where)
+        $result['list'] = GlClassifyAd::join('gl_classify_ad parent_gl_classify_ad', 'gl_classify_ad.parent_id = parent_gl_classify_ad.id')
+            ->where($where)
             ->page($data['page'], $data['limit'])
-            ->order(['parent_id', 'sort_order' => 'desc'])
+            ->order(['gl_classify_ad.parent_id', 'gl_classify_ad.sort_order' => 'desc'])
+            ->field('gl_classify_ad.id,gl_classify_ad.classify_name,gl_classify_ad.into_type,gl_classify_ad.click_type,gl_classify_ad.parent_id,gl_classify_ad.sort_order,gl_classify_ad.key_word,gl_classify_ad.goods_id,gl_classify_ad.logo_img,gl_classify_ad.bar_img,parent_gl_classify_ad.classify_name as parent_name')
             ->select();
         $result['count'] = GlClassifyAd::where($where)->count();
 
@@ -72,7 +74,7 @@ class CmsClassifyAd
     public function addClassify()
     {
         //验证必要
-        (new CurrencyValidate())->myGoCheck(['classify_name', 'into_type', 'parent_id', 'sort_order','click_type'], 'require');
+        (new CurrencyValidate())->myGoCheck(['classify_name', 'into_type', 'parent_id', 'sort_order', 'click_type'], 'require');
         //验证正整数
         (new CurrencyValidate())->myGoCheck(['sort_order'], 'positiveInt');
         UserAuthority::checkAuthority(8);

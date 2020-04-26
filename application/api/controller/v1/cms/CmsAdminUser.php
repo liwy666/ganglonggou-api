@@ -11,9 +11,17 @@ use app\api\validate\CurrencyValidate;
 
 class CmsAdminUser
 {
+    /**
+     * @return mixed
+     * @throws \app\lib\exception\CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 返回管理用户列表
+     */
     public function getAdminUsers()
     {
-        //返回管理用户列表
+
         UserAuthority::checkAuthority(10);
         //验证必要
         (new CurrencyValidate())->myGoCheck(['page', 'limit'], 'require');

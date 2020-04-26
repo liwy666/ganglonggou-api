@@ -10,8 +10,10 @@ namespace app\api\controller\v1\cms;
 
 
 use app\api\model\GlCoupon;
+use app\api\model\GlMidUserCoupon;
 use app\api\service\UserAuthority;
 use app\api\validate\CurrencyValidate;
+use app\lib\exception\CommonException;
 
 class CmsCoupon
 {
@@ -46,11 +48,11 @@ class CmsCoupon
         switch (request()->param('grant_type')) {
             case 'solo':
                 (new CurrencyValidate())->myGoCheck(['solo'], 'require');
-                $data["solo"] = json_encode(request()->param("solo/a"),JSON_NUMERIC_CHECK);
+                $data["solo"] = json_encode(request()->param("solo/a"), JSON_NUMERIC_CHECK);
                 break;
             case 'classify':
                 (new CurrencyValidate())->myGoCheck(['classify'], 'require');
-                $data["classify"] = json_encode(request()->param("classify/a"),JSON_NUMERIC_CHECK);
+                $data["classify"] = json_encode(request()->param("classify/a"), JSON_NUMERIC_CHECK);
                 break;
         }
 
@@ -72,7 +74,7 @@ class CmsCoupon
         //验证必要
         (new CurrencyValidate())->myGoCheck(['coupon_name', 'coupon_desc', 'start_grant_time', 'end_grant_time', 'start_use_time', 'end_use_time', 'found_sum', 'cut_sum', 'coupon_number', 'coupon_remainder_number', 'into_type', 'grant_type'], 'require');
         //验证正整数
-        (new CurrencyValidate())->myGoCheck(['start_grant_time', 'end_grant_time', 'coupon_number','coupon_id'], 'positiveInt');
+        (new CurrencyValidate())->myGoCheck(['start_grant_time', 'end_grant_time', 'coupon_number', 'coupon_id'], 'positiveInt');
 
         $coupon_id = request()->param("coupon_id");
         $data["coupon_name"] = request()->param("coupon_name");
@@ -92,18 +94,52 @@ class CmsCoupon
         switch (request()->param('grant_type')) {
             case 'solo':
                 (new CurrencyValidate())->myGoCheck(['solo'], 'require');
-                $data["solo"] = json_encode(request()->param("solo/a"),JSON_NUMERIC_CHECK);
+                $data["solo"] = json_encode(request()->param("solo/a"), JSON_NUMERIC_CHECK);
                 break;
             case 'classify':
                 (new CurrencyValidate())->myGoCheck(['classify'], 'require');
-                $data["classify"] = json_encode(request()->param("classify/a"),JSON_NUMERIC_CHECK);
+                $data["classify"] = json_encode(request()->param("classify/a"), JSON_NUMERIC_CHECK);
                 break;
         }
 
-        GlCoupon::where(['coupon_id'=> $coupon_id])
-        ->update($data);
+        GlCoupon::where(['coupon_id' => $coupon_id])
+            ->update($data);
 
         return true;
+    }
+
+    public function getCouponInfo()
+    {
+        UserAuthority::checkAuthority(8);
+        //验证必要
+        (new CurrencyValidate())->myGoCheck(['coupon_id'], 'require');
+        //验证正整数
+        (new CurrencyValidate())->myGoCheck(['coupon_id'], 'positiveInt');
+        $couponId = request()->param('coupon_id');
+        $couponInfo = GlCoupon::where([
+            ['coupon_id', '=', $couponId],
+            ["is_del", '=', 0]
+        ])
+            ->find();
+        if (!$couponInfo) {
+            throw new  CommonException(['msg' => "该优惠券不存在"]);
+        }
+
+        $couponInfo['getNumber'] = GlMidUserCoupon::where([
+            'coupon_id' => $couponId,
+        ])->count();
+
+        $couponInfo['useNumber'] = GlMidUserCoupon::where([
+            'coupon_id' => $couponId,
+            'is_use' => 1
+        ])->count();
+
+        $couponInfo['withoutUseNumber'] = GlMidUserCoupon::where([
+            'coupon_id' => $couponId,
+            'is_use' => 0
+        ])->count();
+
+        return $couponInfo;
     }
 
 
@@ -114,7 +150,8 @@ class CmsCoupon
      * @throws \think\exception\PDOException
      * 删除优惠券
      */
-    public function delCoupon(){
+    public function delCoupon()
+    {
         UserAuthority::checkAuthority(8);
         //验证必要
         (new CurrencyValidate())->myGoCheck(['coupon_id'], 'require');
@@ -123,8 +160,8 @@ class CmsCoupon
 
         $coupon_id = request()->param("coupon_id");
 
-        GlCoupon::where(['coupon_id'=> $coupon_id])
-            ->update(['is_del'=>1]);
+        GlCoupon::where(['coupon_id' => $coupon_id])
+            ->update(['is_del' => 1]);
 
         return true;
 
@@ -139,7 +176,8 @@ class CmsCoupon
      * @throws \think\exception\DbException
      * 分页获取优惠券列表
      */
-    public function giveCouponListByPage(){
+    public function giveCouponListByPage()
+    {
         //验证必要
         (new CurrencyValidate())->myGoCheck(['page', 'limit'], 'require');
         //验证正整数

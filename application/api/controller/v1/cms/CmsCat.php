@@ -50,8 +50,10 @@ class CmsCat
         $data['page'] = request()->param('page');
         $data['limit'] = request()->param('limit');
 
-        $result['list'] = GlCategory::page($data['page'], $data['limit'])
-            ->order('cat_id desc')
+        $result['list'] = GlCategory::join('gl_category p_gl_category', 'gl_category.parent_id = p_gl_category.cat_id')
+            ->page($data['page'], $data['limit'])
+            ->order('gl_category.cat_id desc')
+            ->field('gl_category.cat_id,gl_category.parent_id,p_gl_category.cat_name as parent_name,gl_category.cat_name')
             ->select();
 
         $result['count'] = GlCategory::count();
@@ -136,22 +138,73 @@ class CmsCat
             foreach ($cat_id_array_ as $k => $v) {
                 array_push($cat_id_array, $v['cat_id']);
             }
-            $cat_id_str = implode(',',$cat_id_array);
+            $cat_id_str = implode(',', $cat_id_array);
             //删除这些子分类
-            GlCategory::where('cat_id','exp','IN('.$cat_id_str.')')
-            ->delete();
+            GlCategory::where('cat_id', 'exp', 'IN(' . $cat_id_str . ')')
+                ->delete();
             //删除这些子分类下的商品
-            GlGoods::where('cat_id','exp','IN('.$cat_id_str.')')
-                ->update(['is_del'=>1]);
+            GlGoods::where('cat_id', 'exp', 'IN(' . $cat_id_str . ')')
+                ->update(['is_del' => 1]);
         }
         //删除该分类
         GlCategory::where($data)
             ->delete();
         //删除改分类下商品
         GlGoods::where($data)
-            ->update(['is_del'=>1]);
+            ->update(['is_del' => 1]);
 
         return true;
+    }
+
+    /**
+     * @return string
+     * @throws CommonException
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     * 转移商品
+     */
+    public function shearGoodsByCatId()
+    {
+        UserAuthority::checkAuthority(8);
+        (new CurrencyValidate())->myGoCheck(['cat_id', 'aim_cat_id'], 'require');
+        (new CurrencyValidate())->myGoCheck(['cat_id', 'aim_cat_id'], 'positiveInt');
+        $catId = request()->param('cat_id');
+        $aimCatId = request()->param('aim_cat_id');
+
+        $oldCateGory = GlCategory::where([
+            'cat_id' => $catId,
+        ])->find();
+
+        $aimCateGory = GlCategory::where([
+            'cat_id' => $aimCatId,
+        ])->find();
+
+        //检查原分类和目标分类是否符合规范
+        if (!$oldCateGory) {
+            throw new CommonException(["msg" => "原分类不存在"]);
+        }
+        if ($oldCateGory['parent_id'] === 0) {
+            throw new CommonException(['msg' => '顶级分类不支持商品转移']);
+        }
+        if (!$aimCateGory) {
+            throw new CommonException(["msg" => "目标分类不存在"]);
+        }
+        if ($aimCateGory['parent_id'] === 0) {
+            throw new CommonException(['msg' => '顶级分类不支持商品转移']);
+        }
+        //开始转移
+        $number = GlGoods::where([
+            "is_del" => 0,
+            "cat_id" => $oldCateGory['cat_id']
+        ])->update([
+            "cat_id" => $aimCatId
+        ]);
+
+        return "成功转移$number 件商品";
+
     }
 
 }
