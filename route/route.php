@@ -167,6 +167,8 @@ Route::get('api/:version/cms/cms_get_app_version_info$', 'api/:version.AppVersio
 Route::get('api/:version/cms/get_menus_list$', 'api/:version.cms.CmsMenus/getMenusList');
 //添加菜单
 Route::post('api/:version/cms/add_menu$', 'api/:version.cms.CmsMenus/addMenu');
+/*积分卡管理*/
+Route::get('api/:version/cms/get_integral_card_list$', 'api/:version.cms.CmsIntegralCard/getIntegralCardList');
 
 /*goods_make*/
 //获取首页信息

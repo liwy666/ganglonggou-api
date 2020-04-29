@@ -100,6 +100,7 @@ return [
         'double_eleven' => -1,
         'double_eleven_burst' => -1,
         'fashion_sci_tech' => -1,
+        'mother_day' => -1,
     ),
     /*邮件服务器配置*/
     'email_address' => $json_array['email_server']['email_address'],

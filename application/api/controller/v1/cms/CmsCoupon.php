@@ -108,6 +108,14 @@ class CmsCoupon
         return true;
     }
 
+    /**
+     * @return array|\PDOStatement|string|\think\Model|null
+     * @throws CommonException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 返回优惠券信息
+     */
     public function getCouponInfo()
     {
         UserAuthority::checkAuthority(8);
